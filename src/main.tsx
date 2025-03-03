@@ -12,7 +12,7 @@ Amplify.configure(outputs);
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider>
-      <Authenticator socialProviders={['amazon', 'apple', 'facebook', 'google']}>
+      <Authenticator socialProviders={['apple', 'facebook', 'google']}>
         <App />
       </Authenticator>
     </ThemeProvider>
