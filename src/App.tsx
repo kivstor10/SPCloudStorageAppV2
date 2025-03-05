@@ -3,7 +3,7 @@ import { Authenticator } from "@aws-amplify/ui-react";
 import { 
   Layout,
   Landing, 
-  SignIn,
+  Signin,
   AdminLog,
   UserManagement
 } from "./pages";
@@ -35,7 +35,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/sign-in",
-        element: <SignIn />,
+        element: <Signin />,
       },
       {
         path: "/admin/*",
