@@ -1,6 +1,6 @@
 import React from 'react';
 import DeviceConnected from '../assets/DeviceConnected.svg';
-import DeviceDisconnected from '../assets/DeviceDisconnected.svg';
+// import DeviceDisconnected from '../assets/DeviceDisconnected.svg';
 import SettingsIcon from '../assets/Settings.svg';
 import DefaultUserIcon from '../assets/DefaultUserIcon.svg';
 
