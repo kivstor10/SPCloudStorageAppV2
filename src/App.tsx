@@ -1,11 +1,12 @@
 import "./App.css";
-import { Authenticator } from "@aws-amplify/ui-react";
+// import { Authenticator } from "@aws-amplify/ui-react";
 import { 
   Layout,
   Landing, 
   Signin,
   AdminLog,
-  UserManagement
+  UserManagement,
+  Loadout
 } from "./pages";
 import {
   Route,
@@ -16,12 +17,12 @@ import {
 import "@aws-amplify/ui-react/styles.css";
 
 const AdminRoutes = () => (
-  <Authenticator>
+
     <Routes>
       <Route path="/log" element={<AdminLog />} />
       <Route path="/usermanagement:id" element={<UserManagement />} />
     </Routes>
-  </Authenticator>
+
 );
 
 const router = createBrowserRouter([
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/sign-in",
         element: <Signin />,
+      },
+      {
+        path: "/loadout",
+        element: <Loadout />,
       },
       {
         path: "/admin/*",
