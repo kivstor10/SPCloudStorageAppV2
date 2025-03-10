@@ -6,16 +6,17 @@ import MenuButton from './MenuButton';
 // Define the prop types for LoadoutItem
 interface LoadoutItemProps {
   active?: string; 
+  isConnected: boolean;
 }
 
-const LoadoutItem: React.FC<LoadoutItemProps> = ({ active = "" }) => {
+const LoadoutItem: React.FC<LoadoutItemProps> = ({ active = "", isConnected}) => {
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
 
   return (
     <li className={active}>
-      <Link to="/loadout">
+      <Link to={isConnected ? "/loadout" : "#" }>
         <img src={LoadoutIcon} alt="Add new loadout" />
         Loadout 1
       </Link>

@@ -3,11 +3,11 @@ import LoadoutItem from './LoadoutItem';
 import AddNewIcon from '../assets/AddNewIcon.svg';
 
 // Define the component
-const LoadoutMenu: React.FC = () => {
+const LoadoutMenu: React.FC<{ isConnected: boolean }> = ({ isConnected }) => {
   return (
     <div className="LoadoutMenuContainer">
       <ol>
-        <LoadoutItem active="active" />
+        <LoadoutItem active="active" isConnected={ isConnected }/>
       </ol>
       <div className="addNewLoadoutButton">
         <img src={AddNewIcon} alt="Add new loadout" />

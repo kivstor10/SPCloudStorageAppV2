@@ -88,6 +88,21 @@ button {
   display: flex;
 }
 
+.connect_device_button{
+  display: flex;
+  background-color: #F28E32;
+  color: white;
+  place-items: center;
+  padding: 0 15px;
+  margin: 0 10px;
+  border-radius: 100px;
+  font-weight: 800;
+}
+
+.connect_device_button:hover{
+  color: white
+}
+
 .personalPreferances{
   display: inherit;
   gap: 5px;
