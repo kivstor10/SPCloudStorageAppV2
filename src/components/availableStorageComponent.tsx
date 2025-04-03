@@ -21,12 +21,22 @@ function StorageInfoComponent() {
 
   const [error, setError] = useState<string | null>(null);
 
+  const formatBytes = (bytes: number | null): string => {
+    if (bytes === null) return 'N/A';
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return `${(bytes / Math.pow(k, i)).toFixed(2)} ${sizes[i]}`;
+  };
+
   useEffect(() => {
     async function getStorageInfo() {
       try {
-        // Check if the Storage API is available
         if (!navigator.storage?.estimate) {
-          throw new Error('Storage Estimation API not available in this browser');
+          throw new Error('Storage Estimation API not available');
         }
 
         const storage = await navigator.storage.estimate() as StorageEstimate;
@@ -48,17 +58,6 @@ function StorageInfoComponent() {
 
     getStorageInfo();
   }, []);
-
-  const formatBytes = (bytes: number | null): string => {
-    if (bytes === null) return 'N/A';
-    if (bytes === 0) return '0 Bytes';
-
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i];
-  };
 
   return (
     <Paper sx={{ p: 2, mt: 2 }}>
