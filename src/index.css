@@ -52,10 +52,13 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
+  justify-content: center;
   min-width: 320px;
   min-height: 100vh;
   background-color: #231F20;
 }
+
+
 
 ol{
   padding: 0;
@@ -91,7 +94,7 @@ button {
 .connect_device_button{
   display: flex;
   background-color: #F28E32;
-  color: white;
+  color: #242424;
   place-items: center;
   padding: 0 15px;
   margin: 0 10px;
@@ -100,13 +103,17 @@ button {
 }
 
 .connect_device_button:hover{
-  color: white
+  color: #242424;
 }
 
 .personalPreferances{
   display: inherit;
   gap: 5px;
   margin-left: auto;
+}
+.personalPreferances > button{
+  padding: 0;
+  border: none;
 }
 
 .landingPage{
@@ -179,10 +186,16 @@ button {
   background-color: #F28E32;
 }
 
+.LoadoutMenuContainer > ol > li{
+  margin-bottom: 20px;
+  background-color: white
+}
+
 .addNewLoadoutButton{
   margin: 20px;
   display: flex;
   gap: 20px;
+  cursor: pointer;
 }
 .addNewLoadoutButton > h2{
   font-size: 13px;

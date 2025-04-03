@@ -1,27 +1,34 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import LoadoutIcon from '../assets/LoadoutIcon.svg';
-import MenuButton from './MenuButton';
+import LoadoutOptions from './LoadoutOptions';
 
-// Define the prop types for LoadoutItem
 interface LoadoutItemProps {
   active?: string; 
   isConnected: boolean;
+  name: string;
+  id: string;
+  onClick: () => void;
 }
 
-const LoadoutItem: React.FC<LoadoutItemProps> = ({ active = "", isConnected}) => {
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+const LoadoutItem: React.FC<LoadoutItemProps> = ({ 
+  active = "", 
+  isConnected,
+  name = "Loadout",
+  onClick
+}) => {
+  const handleOptionsClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
 
   return (
-    <li className={active}>
-      <Link to={isConnected ? "/loadout" : "#" }>
-        <img src={LoadoutIcon} alt="Add new loadout" />
-        Loadout 1
+    <li className={active} onClick={onClick}>
+      <Link to={isConnected ? "/loadout" : "#"} onClick={(e) => e.stopPropagation()}>
+        <img src={LoadoutIcon} alt="Loadout icon" />
+        {name}
       </Link>
-      <div onClick={handleClick}>
-        <MenuButton />
+      <div onClick={handleOptionsClick}>
+        <LoadoutOptions />
       </div>
     </li>
   );
