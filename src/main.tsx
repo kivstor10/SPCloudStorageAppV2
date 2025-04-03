@@ -7,7 +7,6 @@ import { Authenticator } from '@aws-amplify/ui-react';
 import { Amplify } from 'aws-amplify';
 import "@aws-amplify/ui-react/styles.css";
 import { ThemeProvider } from './contexts/ThemeContext';
-import { darkTheme, lightTheme } from './theme';
 
 Amplify.configure(outputs);
 
