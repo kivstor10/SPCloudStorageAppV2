@@ -12,10 +12,10 @@ const LoadoutMenu: React.FC<LoadoutMenuProps> = ({ isConnected }) => {
   const [loadouts, setLoadouts] = useState([{ 
     id: 1, 
     active: true,
-    name: "Loadout 1"
+    name: "Loadout"
   }]);
 
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') return;
     setOpen(false);
   };
