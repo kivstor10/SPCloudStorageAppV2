@@ -18,7 +18,22 @@ const LoadoutOptions: React.FC<LoadoutOptionsProps> = ({ active = false }) => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  }
+
+  const handleDelete = () => {
+    console.log("Handle delete...");
+    setAnchorEl(null);
   };
+
+  const handleSetActive = () => {
+    console.log("Handle setActive...");
+    setAnchorEl(null);
+  };
+
+  const handleRename = () =>{
+    console.log("Handle rename...");
+    setAnchorEl(null);
+  }
 
   return (
     <div>
@@ -40,11 +55,11 @@ const LoadoutOptions: React.FC<LoadoutOptionsProps> = ({ active = false }) => {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleSetActive}>
           {active ? 'Deactivate' : 'Set as active'}
         </MenuItem>
-        <MenuItem onClick={handleClose}>Rename</MenuItem>
-        <MenuItem onClick={handleClose}>Delete</MenuItem>
+        <MenuItem onClick={handleRename}>Rename</MenuItem>
+        <MenuItem onClick={handleDelete}>Delete</MenuItem>
       </Menu>
     </div>
   );
