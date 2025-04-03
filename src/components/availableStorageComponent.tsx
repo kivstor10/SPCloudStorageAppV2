@@ -1,50 +1,88 @@
 import { Typography, Box, Paper } from '@mui/material';
 import { useState, useEffect } from 'react';
 
+interface StorageEstimate {
+  quota?: number;
+  usage?: number;
+}
+
+interface StorageInfo {
+  total: number | null;
+  used: number | null;
+  available: number | null;
+}
+
 function StorageInfoComponent() {
-  const [storageInfo, setStorageInfo] = useState({
-    total: 0,
-    used: 0,
-    available: 0,
+  const [storageInfo, setStorageInfo] = useState<StorageInfo>({
+    total: null,
+    used: null,
+    available: null,
   });
+
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function getStorageInfo() {
-      if (navigator.storage && navigator.storage.estimate) {
-        try {
-          const storage = await navigator.storage.estimate({
-            quota: 1024 * 1024 * 1024, // Example: 1GB
-            usage: 1024 * 1024 * 1024,
-          });
-          setStorageInfo({
-            total: storage.quota,
-            used: storage.usage,
-            available: storage.quota - storage.usage,
-          });
-        } catch (error) {
-          console.error("Error estimating storage:", error);
+      try {
+        // Check if the Storage API is available
+        if (!navigator.storage?.estimate) {
+          throw new Error('Storage Estimation API not available in this browser');
         }
+
+        const storage = await navigator.storage.estimate() as StorageEstimate;
+
+        if (storage.quota === undefined || storage.usage === undefined) {
+          throw new Error('Could not retrieve storage information');
+        }
+
+        setStorageInfo({
+          total: storage.quota,
+          used: storage.usage,
+          available: storage.quota - storage.usage,
+        });
+      } catch (error) {
+        console.error("Error estimating storage:", error);
+        setError(error instanceof Error ? error.message : 'Failed to get storage information');
       }
     }
+
     getStorageInfo();
   }, []);
+
+  const formatBytes = (bytes: number | null): string => {
+    if (bytes === null) return 'N/A';
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i];
+  };
 
   return (
     <Paper sx={{ p: 2, mt: 2 }}>
       <Typography variant="h6" component="div" gutterBottom>
         Storage Information
       </Typography>
-      <Box>
-        <Typography variant="body2">
-          Total: {storageInfo.total} bytes
+      
+      {error ? (
+        <Typography color="error" variant="body2">
+          {error}
         </Typography>
-        <Typography variant="body2">
-          Used: {storageInfo.used} bytes
-        </Typography>
-        <Typography variant="body2">
-          Available: {storageInfo.available} bytes
-        </Typography>
-      </Box>
+      ) : (
+        <Box>
+          <Typography variant="body2">
+            Total: {formatBytes(storageInfo.total)}
+          </Typography>
+          <Typography variant="body2">
+            Used: {formatBytes(storageInfo.used)}
+          </Typography>
+          <Typography variant="body2">
+            Available: {formatBytes(storageInfo.available)}
+          </Typography>
+        </Box>
+      )}
     </Paper>
   );
 }
