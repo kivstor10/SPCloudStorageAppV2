@@ -239,15 +239,20 @@ button {
   margin: auto;
 }
 
+.LoadoutMenuContainer{
+    display: flex;
+    flex-direction: column;
+}
+
 .ViewLoadout {
   border-radius: 5px;
-  background-color: #DECFC2;
+  /* background-color: #DECFC2; */
   color: #231F20;
   font-size: 13px;
-  margin: 20px auto;
-  padding: 20px;
+  margin: 20px auto !important;
+  padding: 20px!important;
   max-width: 400px;
-  width: 100%;
+  width: 400px;
 }
 
 .uploadLoadoutButton{
@@ -268,9 +273,9 @@ button {
 }
 
 @media (max-width: 400px) {
-  .ViewLoadout, .LoadoutMenuContainer {
-    width: 100vw;
-    margin: 0 auto;
+
+  .ViewLoadout {
+    width: 100%;
     padding: 20px; 
     box-sizing: border-box; 
   }
