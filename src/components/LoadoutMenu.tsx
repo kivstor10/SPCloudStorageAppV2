@@ -33,10 +33,6 @@ const LoadoutMenu: React.FC<LoadoutMenuProps> = ({ isConnected }) => {
   };
 
   const handleAddLoadout = () => {
-    if (!isConnected) {
-      setOpen(true);
-      return;
-    }
     
     const newLoadout = {
       id: Date.now(),
@@ -46,6 +42,14 @@ const LoadoutMenu: React.FC<LoadoutMenuProps> = ({ isConnected }) => {
     
     setLoadouts(prev => [...prev, newLoadout]);
   };
+
+  const handleUpload = () => {
+    if (!isConnected) {  
+      setOpen(true);
+      return;
+    }
+    // Handle upload logic here   
+  }
 
   return (
     <div className="LoadoutMenuContainer">
@@ -69,11 +73,14 @@ const LoadoutMenu: React.FC<LoadoutMenuProps> = ({ isConnected }) => {
         <h2>ADD NEW LOADOUT</h2>
       </div>
 
+      <div className="uploadLoadoutButton">
+        <h2 onClick={handleUpload}>UPLOAD NEW LOADOUT</h2>
+      </div>
       <Snackbar
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         open={open}
         onClose={handleClose}
-        autoHideDuration={4000}
+        autoHideDuration={2800}
         message="Please connect your device to access your loadout"
       />
     </div>

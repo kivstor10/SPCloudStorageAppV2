@@ -32,7 +32,7 @@ const LoadoutPage: React.FC<LoadoutPageProps> = ({ }) => {
 
   return (
     <div className="LoadoutPageContainer">
-      <Navbar isConnected={ true }/>
+      <Navbar isConnected={ false }/>
       <h1>
         <Link to="/">
           MY <b>SP</b>CLOUD

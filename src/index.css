@@ -226,6 +226,10 @@ button {
   color: white;
 }
 
+.LoadoutPageContainer > h1 > a, .LoadoutPageContainer > h1{
+  color: var(--text-primary);
+}
+
 .LoadoutPageContainer > h1 > a > b{
   color: #F28E32;
 }
@@ -241,8 +245,25 @@ button {
   font-size: 13px;
   margin: 20px auto;
   padding: 20px;
-  max-width: 400px; 
+  max-width: 400px;
   width: 100%;
+}
+
+.uploadLoadoutButton{
+  position: absolute;
+  display: flex;
+  bottom: 20px;
+  right: 15px;
+}
+
+.uploadLoadoutButton > h2{
+  font-size: 15px;
+  margin: auto;
+  background-color: #F28E32;
+  text-align: center;
+  padding: 10px 20px;
+  border-radius: 20px;
+  color: #242424;
 }
 
 @media (max-width: 400px) {

@@ -5,7 +5,6 @@ import LoadoutOptions from './LoadoutOptions';
 
 interface LoadoutItemProps {
   active?: string; 
-  isConnected: boolean;
   name: string;
   id: string;
   onClick: () => void;
@@ -13,7 +12,6 @@ interface LoadoutItemProps {
 
 const LoadoutItem: React.FC<LoadoutItemProps> = ({ 
   active = "", 
-  isConnected,
   name = "Loadout",
   onClick
 }) => {
@@ -23,7 +21,7 @@ const LoadoutItem: React.FC<LoadoutItemProps> = ({
 
   return (
     <li className={active} onClick={onClick}>
-      <Link to={isConnected ? "/loadout" : "#"} onClick={(e) => e.stopPropagation()}>
+      <Link to={"/loadout"} onClick={(e) => e.stopPropagation()}>
         <img src={LoadoutIcon} alt="Loadout icon" />
         {name}
       </Link>

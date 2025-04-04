@@ -72,8 +72,6 @@ const Navbar: React.FC<NavBarProps> = ({ isConnected, setIsConnected }) => {
           open={open}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose}>Preferences</MenuItem>
-          <MenuItem onClick={handleClose}>My account</MenuItem>
           <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>       
       </div>
