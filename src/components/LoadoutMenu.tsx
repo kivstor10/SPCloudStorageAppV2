@@ -52,37 +52,37 @@ const LoadoutMenu: React.FC<LoadoutMenuProps> = ({ isConnected }) => {
   }
 
   return (
-    <div className="LoadoutMenuContainer">
-      <ol>
-        {loadouts.map((loadout) => (
-          <LoadoutItem 
-            key={loadout.id}
-            active={loadout.active ? "active" : ""}
-            name={loadout.name}
-            id={loadout.id.toString()}
-            onClick={() => handleLoadoutClick(loadout.id)}
-          />
-        ))}
-      </ol>
-      <div 
-        className="addNewLoadoutButton" 
-        onClick={handleAddLoadout}
-      >
-        <img src={AddNewIcon} alt="Add new loadout" />
-        <h2>ADD NEW LOADOUT</h2>
-      </div>
+      <div className="LoadoutMenuContainer">
+        <ol>
+          {loadouts.map((loadout) => (
+            <LoadoutItem 
+              key={loadout.id}
+              active={loadout.active ? "active" : ""}
+              name={loadout.name}
+              id={loadout.id.toString()}
+              onClick={() => handleLoadoutClick(loadout.id)}
+            />
+          ))}
+        </ol>
+        <div 
+          className="addNewLoadoutButton" 
+          onClick={handleAddLoadout}
+        >
+          <img src={AddNewIcon} alt="Add new loadout" />
+          <h2>ADD NEW LOADOUT</h2>
+        </div>
 
-      <div className="uploadLoadoutButton">
-        <h2 onClick={handleUpload}>UPLOAD NEW LOADOUT</h2>
+        <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          open={open}
+          onClose={handleClose}
+          autoHideDuration={2800}
+          message="Please connect your device to access your loadout"
+        />
+        <div className="uploadLoadoutButton">
+          <h2 onClick={handleUpload}>UPLOAD NEW LOADOUT</h2>
+        </div>
       </div>
-      <Snackbar
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        open={open}
-        onClose={handleClose}
-        autoHideDuration={2800}
-        message="Please connect your device to access your loadout"
-      />
-    </div>
   );
 };
 

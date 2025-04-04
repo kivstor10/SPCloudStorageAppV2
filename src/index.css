@@ -25,6 +25,7 @@ main{
   width: 100vw;
 }
 
+
 a {
   font-weight: 500;
   color: #646cff;
@@ -100,7 +101,7 @@ button {
   margin: 0 10px;
   border-radius: 100px;
   font-weight: 800;
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .connect_device_button:hover{
@@ -255,7 +256,7 @@ button {
 }
 
 .uploadLoadoutButton{
-  position: absolute;
+  position: fixed;
   display: flex;
   bottom: 20px;
   right: 15px;
