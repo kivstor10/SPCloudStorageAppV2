@@ -101,6 +101,7 @@ button {
   margin: 0 10px;
   border-radius: 100px;
   font-weight: 800;
+  font-size: 15px;
 }
 
 .connect_device_button:hover{
