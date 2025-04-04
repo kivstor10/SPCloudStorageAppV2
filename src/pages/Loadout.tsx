@@ -13,18 +13,18 @@ interface LoadoutPageProps {
 }
 
 const LoadoutPage: React.FC<LoadoutPageProps> = ({ }) => {
-  const [file, setFile] = React.useState<File | undefined>(undefined);
+  // const [file, setFile] = React.useState<File | undefined>(undefined);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(event.target.files?.[0]);
-  };
-
-  // const handleClick = () => {
-  //   if (!file) {
-  //     return;
-  //   }
-  //   // upload logic
+  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setFile(event.target.files?.[0]);
   // };
+
+  // // const handleClick = () => {
+  // //   if (!file) {
+  // //     return;
+  // //   }
+  // //   // upload logic
+  // // };
 
   const banks = ["BANK A", "BANK B", "BANK C", "BANK D", "BANK E", 
                 "BANK F", "BANK G", "BANK H", "BANK I", "BANK J"];
