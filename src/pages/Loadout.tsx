@@ -36,7 +36,7 @@ const LoadoutPage: React.FC<LoadoutPageProps> = ({ }) => {
       <h1>
         <Link to="/">
           MY <b>SP</b>CLOUD
-        </Link>{" "}
+        </Link>
         &gt; LOADOUT 1
       </h1>
       <div className="ViewLoadout">

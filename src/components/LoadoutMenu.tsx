@@ -3,11 +3,11 @@ import LoadoutItem from './LoadoutItem';
 import AddNewIcon from '../assets/AddNewIcon.svg';
 import Snackbar from '@mui/material/Snackbar';
 
-// interface LoadoutMenuProps {
-//   isConnected: boolean;
-// }
+interface LoadoutMenuProps {
+  isConnected: boolean;
+}
 
-const LoadoutMenu: React.FC = () => {
+const LoadoutMenu: React.FC<LoadoutMenuProps> = ({ isConnected }) => {
   const [open, setOpen] = useState(false);
   const [loadouts, setLoadouts] = useState([{ 
     id: 1, 
