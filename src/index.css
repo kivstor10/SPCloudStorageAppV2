@@ -57,6 +57,7 @@ body {
   min-height: 100vh;
   background-color: var(--background-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
+  overflow-x: hidden;
 }
 
 
@@ -132,6 +133,7 @@ button {
   word-spacing: 5px;
   text-align: center;
   color: var(--text-primary);
+  height: 10px;
 }
 
 .landingPage > h1 > b{

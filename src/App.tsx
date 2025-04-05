@@ -39,7 +39,7 @@ const router = createBrowserRouter([
         element: <Signin />,
       },
       {
-        path: "/loadout",
+        path: "/loadout/:loadoutId",
         element: <Loadout />,
       },
       {

@@ -7,9 +7,15 @@ interface LoadoutMenuProps {
   isConnected: boolean;
 }
 
+interface Loadout {
+  id: number;
+  active: boolean;
+  name: string;
+}
+
 const LoadoutMenu: React.FC<LoadoutMenuProps> = ({ isConnected }) => {
   const [open, setOpen] = useState(false);
-  const [loadouts, setLoadouts] = useState([{ 
+  const [loadouts, setLoadouts] = useState<Loadout[]>([{ 
     id: 1, 
     active: true,
     name: "Loadout"
@@ -21,11 +27,6 @@ const LoadoutMenu: React.FC<LoadoutMenuProps> = ({ isConnected }) => {
   };
 
   const handleLoadoutClick = (id: number) => {
-    // if (!isConnected) {
-    //   setOpen(true);
-    //   return;
-    // }
-    
     setLoadouts(prev => prev.map(loadout => ({
       ...loadout,
       active: loadout.id === id
@@ -33,14 +34,23 @@ const LoadoutMenu: React.FC<LoadoutMenuProps> = ({ isConnected }) => {
   };
 
   const handleAddLoadout = () => {
-    
     const newLoadout = {
       id: Date.now(),
       active: false,
       name: `Loadout ${loadouts.length + 1}`
     };
-    
     setLoadouts(prev => [...prev, newLoadout]);
+  };
+
+  const handleDeleteLoadout = (id: number) => {
+    setLoadouts(prev => {
+      const newLoadouts = prev.filter(loadout => loadout.id !== id);
+      // Ensure at least one loadout remains active
+      if (newLoadouts.length > 0 && !newLoadouts.some(l => l.active)) {
+        newLoadouts[0].active = true;
+      }
+      return newLoadouts;
+    });
   };
 
   const handleUpload = () => {
@@ -49,40 +59,40 @@ const LoadoutMenu: React.FC<LoadoutMenuProps> = ({ isConnected }) => {
       return;
     }
     // Handle upload logic here   
-  }
+  };
 
   return (
-      <div className="LoadoutMenuContainer">
-        <ol>
-          {loadouts.map((loadout) => (
-            <LoadoutItem 
-              key={loadout.id}
-              active={loadout.active ? "active" : ""}
-              name={loadout.name}
-              id={loadout.id.toString()}
-              onClick={() => handleLoadoutClick(loadout.id)}
-            />
-          ))}
-        </ol>
-        <div 
-          className="addNewLoadoutButton" 
-          onClick={handleAddLoadout}
-        >
-          <img src={AddNewIcon} alt="Add new loadout" />
-          <h2>ADD NEW LOADOUT</h2>
-        </div>
+    <div className="LoadoutMenuContainer">
+      <ol>
+        {loadouts.map((loadout) => (
+          <LoadoutItem 
+            key={loadout.id}
+            active={loadout.active ? "active" : ""}
+            name={loadout.name}
+            id={loadout.id.toString()}
+            onClick={() => handleLoadoutClick(loadout.id)}
+            onDelete={() => handleDeleteLoadout(loadout.id)}
+          />
+        ))}
+      </ol>
 
-        <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          open={open}
-          onClose={handleClose}
-          autoHideDuration={2800}
-          message="Please connect your device to access your loadout"
-        />
-        <div className="uploadLoadoutButton">
-          <h2 onClick={handleUpload}>UPLOAD NEW LOADOUT</h2>
-        </div>
+      <div className="addNewLoadoutButton" onClick={handleAddLoadout}>
+        <img src={AddNewIcon} alt="Add new loadout" />
+        <h2>ADD NEW LOADOUT</h2>
       </div>
+
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        open={open}
+        onClose={handleClose}
+        autoHideDuration={2800}
+        message="Please connect your device to access your loadout"
+      />
+
+      <div className="uploadLoadoutButton">
+        <h2 onClick={handleUpload}>UPLOAD NEW LOADOUT</h2>
+      </div>
+    </div>
   );
 };
 
