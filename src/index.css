@@ -252,7 +252,7 @@ button {
   color: #231F20;
   font-size: 13px;
   margin: 20px auto !important;
-  padding: 20px!important;
+  /* padding: 20px!important; */
   max-width: 400px;
   width: 400px;
 }
@@ -278,7 +278,7 @@ button {
 
   .ViewLoadout {
     width: 100%;
-    padding: 20px; 
+    padding: 5px; 
     box-sizing: border-box; 
   }
   
@@ -295,6 +295,31 @@ button {
 .ViewLoadout > ol > li > hr{
   border: 2px solid #231F20;
 }
+
+.loadoutPadsContainer{
+  display: grid;
+  grid-template-columns: repeat(4, 80px);
+  grid-template-rows: repeat(3, 70px);
+  place-items: center;
+}
+.loadoutPad{
+  display: flex;
+  place-content: center;
+  justify-items: center;
+  background-color: #D9D9D9;
+  width: 50px;
+  height: 40px;
+  border-radius: 3px;
+  outline: 3px solid black;
+}
+.loadoutPad:hover{
+  cursor: pointer;
+}
+.loadoutPad > img{
+  margin: auto;
+  height: 20px;
+}
+
 
 .welcome-page-container{
   display: flex;

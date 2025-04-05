@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
-// import Chevron from "../assets/Chevron.svg";
 import React from "react";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -8,26 +7,43 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+// Create a mapping of all possible pad imports
+const padImports = {
+  pad1: () => import("../assets/1.svg"),
+  pad2: () => import("../assets/2.svg"),
+  pad3: () => import("../assets/3.svg"),
+  pad4: () => import("../assets/4.svg"),
+  pad5: () => import("../assets/5.svg"),
+  pad6: () => import("../assets/6.svg"),
+  pad7: () => import("../assets/7.svg"),
+  pad8: () => import("../assets/8.svg"),
+  pad9: () => import("../assets/9.svg"),
+  pad10: () => import("../assets/10.svg"),
+  pad11: () => import("../assets/11.svg"),
+  pad12: () => import("../assets/12.svg"),
+};
+
 interface LoadoutPageProps {
   id?: string;
 }
 
 const LoadoutPage: React.FC<LoadoutPageProps> = ({ }) => {
-  // const [file, setFile] = React.useState<File | undefined>(undefined);
-
-  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setFile(event.target.files?.[0]);
-  // };
-
-  // // const handleClick = () => {
-  // //   if (!file) {
-  // //     return;
-  // //   }
-  // //   // upload logic
-  // // };
-
   const banks = ["BANK A", "BANK B", "BANK C", "BANK D", "BANK E", 
                 "BANK F", "BANK G", "BANK H", "BANK I", "BANK J"];
+  
+  const [loadoutPads, setLoadoutPads] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    // Load all pad images dynamically in a Vite-compatible way
+    const loadImages = async () => {
+      const images = await Promise.all(
+        Object.values(padImports).map(importer => importer().then(module => module.default))
+      );
+      setLoadoutPads(images);
+    };
+
+    loadImages();
+  }, []);
 
   return (
     <div className="LoadoutPageContainer">
@@ -41,15 +57,15 @@ const LoadoutPage: React.FC<LoadoutPageProps> = ({ }) => {
       <div className="ViewLoadout">
         {banks.map((bank, index) => (
           <Accordion 
-          key={index}
-          sx={{
-            backgroundColor: 'var(--background-primary)',
-            color: 'var(--text-primary)',
-            marginBottom: '8px',
-            borderRadius: '4px',
-            '&:before': { display: 'none' },
-          }}
-        >
+            key={index}
+            sx={{
+              backgroundColor: 'var(--background-primary)',
+              color: 'var(--text-primary)',
+              marginBottom: '8px',
+              borderRadius: '4px',
+              '&:before': { display: 'none' },
+            }}
+          >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls={`panel${index}-content`}
@@ -58,10 +74,23 @@ const LoadoutPage: React.FC<LoadoutPageProps> = ({ }) => {
               <Typography component="span">{bank}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              {/* Replace this with your bank content */}
-              <Typography>
-                This is where you would put the contents of {bank}.
-                You can add buttons, sounds, or other components here.
+              <Typography component="div">
+                {loadoutPads.length > 0 ? (
+                  <div className="loadoutPadsContainer">
+                    {loadoutPads.map((pad, padIndex) => (
+                      <div key={padIndex} className="loadoutPad">
+                        <img src={pad} alt={`Loadout Pad ${padIndex + 1}`} />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div>Loading pads...</div>
+                )}
+                <div>
+                  <button>Import</button>
+                  <button>Export</button>
+                  <button>Delete</button>
+                </div>
               </Typography>
             </AccordionDetails>
           </Accordion>
