@@ -211,7 +211,6 @@ button {
   color: var(--text-primary);
 }
 
-
 .LoadoutPageContainer{
   display: flex;
   margin: 0 auto;
@@ -297,11 +296,40 @@ button {
 }
 
 .loadoutPadsContainer{
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 80px);
   grid-template-rows: repeat(3, 70px);
   place-items: center;
 }
+
+.MuiTypography-root{
+  display: flex;
+  flex-direction: column;
+}
+
+.MuiTypography-root > div:nth-child(2){
+  display: flex;
+  place-content: end;
+  justify-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.MuiTypography-root > div:nth-child(2) > button{
+  background-color: #D9D9D9;
+  outline: 2px solid black;
+  color: #231F20;
+  padding: 0 10px;
+  font-size: 13px;
+  border-radius: 4px;
+}
+
+.MuiTypography-root > div:nth-child(2) > button:nth-child(3){
+  background-color: #F28E32;
+  color: #242424;
+}
+
 .loadoutPad{
   display: flex;
   place-content: center;
@@ -312,9 +340,11 @@ button {
   border-radius: 3px;
   outline: 3px solid black;
 }
+
 .loadoutPad:hover{
   cursor: pointer;
 }
+
 .loadoutPad > img{
   margin: auto;
   height: 20px;

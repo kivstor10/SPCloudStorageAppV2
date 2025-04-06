@@ -59,8 +59,8 @@ const LoadoutPage: React.FC<LoadoutPageProps> = ({ }) => {
           <Accordion 
             key={index}
             sx={{
-              backgroundColor: 'var(--background-primary)',
-              color: 'var(--text-primary)',
+              backgroundColor: '#DECFC2',
+              color: '#231F20',
               marginBottom: '8px',
               borderRadius: '4px',
               '&:before': { display: 'none' },
