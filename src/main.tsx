@@ -3,12 +3,15 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import outputs from "../amplify_outputs.json";
+
 import { Authenticator } from '@aws-amplify/ui-react';
 import { Amplify } from 'aws-amplify';
 import "@aws-amplify/ui-react/styles.css";
 import { ThemeProvider } from './contexts/ThemeContext';
 
-Amplify.configure(outputs);
+Amplify.configure(
+  outputs,
+);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
