@@ -5,6 +5,7 @@ import { storage } from './storage/resource';
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/
+ * @see https://docs.amplify.aws/react/build-a-backend/
  */
 
 const backend = defineBackend({
