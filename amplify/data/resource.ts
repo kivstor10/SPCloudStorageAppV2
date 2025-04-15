@@ -11,6 +11,12 @@ const schema = a.schema({
       allow.authenticated().to(["read"]),
       allow.group("Admins").to(["create", "read", "update", "delete"])
       ]),
+
+        
+  Post: a.customType({
+    userId: a.id().required(),
+    deviceId: a.string().required(),
+  }),
 });
 
 export type Schema = ClientSchema<typeof schema>;
