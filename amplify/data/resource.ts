@@ -1,65 +1,64 @@
-import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
+import { 
+  type ClientSchema, 
+  a, 
+  defineData,
+  defineFunction
+} from '@aws-amplify/backend';
+
+
+const createUserDeviceLink = defineFunction({
+  entry: './resolvers/createUserDeviceLink.ts'
+})
+
+const getDeviceRegistration = defineFunction({
+  entry: './resolvers/getDeviceRegistration.ts'
+})
+
+
 
 const schema = a.schema({
+  // Model for S3-backed Audio Files
   AudioFiles: a
     .model({
       id: a.id(),
       filename: a.string().required(),
     })
-    .authorization((allow: any) => [
+    .authorization((allow) => [
       allow.guest().to(["read"]),
       allow.authenticated().to(["read"]),
       allow.group("Admins").to(["create", "read", "update", "delete"]),
     ]),
 
-    DeviceRegistration: a
+  // Model for Device Registrations (backed by DynamoDB via DataStore)
+  DeviceRegistration: a
     .model({
       deviceId: a.string().required(),
       registrationCode: a.string(),
     })
-    .authorization((allow: any) => [ 
-      allow.guest().to(["read"]),
-      allow.authenticated().to(["read"]),
-      allow.group("Admins").to(["create", "read", "update", "delete"]),
-    ]),
+    .authorization((allow) => [/* ... */]),
 
+  // Type for User Device Links (interacting with existing DynamoDB via custom resolvers)
   UserDeviceLink: a
     .model({
       userId: a.string().required(),
       deviceId: a.string().required(),
     })
-    .authorization((allow: any) => [
-      allow.guest().to(["read"]),
-      allow.authenticated().to(["read"]),
-      allow.group("Admins").to(["create", "read", "update", "delete"]),
-    ]),
+    .authorization((allow) => [/* ... */]),
 
-  // Query to get a DeviceRegistration using a custom resolver
+  // Custom query for DeviceRegistration (DynamoDB)
   getDeviceRegistration: a
     .query()
     .arguments({ deviceId: a.string().required() })
     .returns(a.ref("DeviceRegistration"))
-    .authorization((allow: any) => [ 
-      allow.authenticated().to(["read"]),
-    ])
-    .handler(
-      a.handler.custom({
-        dataSource: "SPCloudDeviceRegDataSource",
-        entry: "./resolvers/getDeviceRegistration.js",
-      })
-    ),
+    .authorization((allow) => [/* ... */])
+    .handler(a.handler.function(getDeviceRegistration)),
 
-  // Mutation to create a UserDeviceLink using a custom resolver
+  // Custom mutation for UserDeviceLink (DynamoDB)
   createUserDeviceLink: a
     .mutation()
     .arguments({ userId: a.string().required(), deviceId: a.string().required() })
     .returns(a.ref("UserDeviceLink"))
-    .handler(
-      a.handler.custom({
-        dataSource: "UserDeviceLinksDataSource",
-        entry: "./resolvers/createUserDeviceLink.js",
-      })
-    ),
+    .handler(a.handler.function(createUserDeviceLink)),
 });
 
 export type Schema = ClientSchema<typeof schema>;
