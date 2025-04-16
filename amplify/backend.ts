@@ -1,6 +1,7 @@
 import { defineBackend } from '@aws-amplify/backend';
 import { auth } from './auth/resource';
 import { data } from './data/resource';
+import { aws_dynamodb } from 'aws-cdk-lib';
 import { storage } from './storage/resource';
 
 /**
@@ -14,10 +15,28 @@ const backend = defineBackend({
   storage,
 });
 
-backend.addOutput({
-  custom: {
-    api_id: "2wtysnmtungedjhmpfdpvklnvm",
-    api_endpoint: "https://pmpeik7lxbcjhctk4fgyn4c2li.appsync-api.eu-west-2.amazonaws.com/graphql",
-    api_name: "SPCloudDeviceRegCodeAPI",
-  },
-});
+const externalDataSourcesStack = backend.createStack('ExternalDataSources');
+
+// Define the DeviceRegistrations table
+const deviceRegistrationsTable = aws_dynamodb.Table.fromTableName(
+  externalDataSourcesStack,
+  'DeviceRegistrationsTable', 
+  'SPCloudDeviceReg' 
+);
+
+backend.data.addDynamoDbDataSource(
+  'DeviceRegistrationsDataSource', 
+  deviceRegistrationsTable
+);
+
+// Define the SPCloudUserDeviceLinks table
+const userDeviceLinksTable = aws_dynamodb.Table.fromTableName(
+  externalDataSourcesStack,
+  'UserDeviceLinksTable', 
+  'SPCloudUserDeviceLinks'
+);
+
+backend.data.addDynamoDbDataSource(
+  'UserDeviceLinksDataSource', 
+  userDeviceLinksTable
+);
