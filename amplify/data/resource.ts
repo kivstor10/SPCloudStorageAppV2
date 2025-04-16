@@ -35,7 +35,7 @@ const schema = a.schema({
       deviceId: a.string().required(),
       registrationCode: a.string(),
     })
-    .authorization((allow) => [/* ... */]),
+    .authorization((allow) => [allow.publicApiKey()]),
 
   // Type for User Device Links (interacting with existing DynamoDB via custom resolvers)
   UserDeviceLink: a
@@ -43,7 +43,7 @@ const schema = a.schema({
       userId: a.string().required(),
       deviceId: a.string().required(),
     })
-    .authorization((allow) => [/* ... */]),
+    .authorization((allow) => [allow.publicApiKey()]),
 
   // Custom query for DeviceRegistration (DynamoDB)
   getDeviceRegistration: a
