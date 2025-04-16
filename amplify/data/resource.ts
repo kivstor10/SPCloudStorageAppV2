@@ -12,12 +12,12 @@ const schema = a.schema({
       allow.group("Admins").to(["create", "read", "update", "delete"]),
     ]),
 
-  DeviceRegistration: a
+    DeviceRegistration: a
     .model({
       deviceId: a.string().required(),
       registrationCode: a.string(),
     })
-    .authorization((allow: any) => [
+    .authorization((allow: any) => [ // Explicitly type 'allow' (though 'any' isn't ideal long-term)
       allow.guest().to(["read"]),
       allow.authenticated().to(["read"]),
       allow.group("Admins").to(["create", "read", "update", "delete"]),
@@ -40,8 +40,7 @@ const schema = a.schema({
     .arguments({ deviceId: a.string().required() })
     .returns(a.ref("DeviceRegistration"))
     .authorization((allow: any) => [ 
-      allow.public().to(["read"]), 
-
+      allow.authenticated().to(["read"]),
     ])
     .handler(
       a.handler.custom({
