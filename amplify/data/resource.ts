@@ -5,6 +5,7 @@ const schema = a.schema({
   AudioFiles: a
     .model({
       id: a.id(),
+      filename: a.string().required(),
     })
     .authorization((allow) => 
       [allow.guest().to(["read"]),
@@ -13,10 +14,43 @@ const schema = a.schema({
       ]),
 
         
-  Post: a.customType({
-    userId: a.id().required(),
-    deviceId: a.string().required(),
-  }),
+  DeviceRegistration: a
+    .model({
+      deviceId: a.string().required(),
+      registrationCode: a.string(),
+    })
+    .authorization((allow) => 
+      [allow.guest().to(["read"]),
+      allow.authenticated().to(["read"]),
+      allow.group("Admins").to(["create", "read", "update", "delete"])
+      ]),
+
+  UserDeviceLink: a
+      .model({
+        userId: a.string().required(),
+        deviceId: a.string().required(),
+      })
+      .authorization((allow) => 
+        [allow.guest().to(["read"]),
+        allow.authenticated().to(["read"]),
+        allow.group("Admins").to(["create", "read", "update", "delete"])
+        ]),
+
+  // Query to get a DeviceRegistration
+  // getDeviceRegistration: a
+  //     .query()
+  //     .arguments({ deviceId: a.string().required() })
+  //     .returns(a.ref("DeviceRegistration"))
+  //     .handler(/* ... */),
+
+  // Mutation to create a UserDeviceLink
+  // createUserDeviceLink: a
+  //     .mutation()
+  //     .arguments(/* ... */)
+  //     .returns(a.ref("UserDeviceLink"))
+  //     .handler(/* ... */),
+
+
 });
 
 export type Schema = ClientSchema<typeof schema>;
