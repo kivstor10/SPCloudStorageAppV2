@@ -13,7 +13,7 @@ const schema = a.schema({
     ]),
 
   DeviceRegistration: a
-    .type({
+    .model({
       deviceId: a.string().required(),
       registrationCode: a.string(),
     })
@@ -24,7 +24,7 @@ const schema = a.schema({
     ]),
 
   UserDeviceLink: a
-    .type({
+    .model({
       userId: a.string().required(),
       deviceId: a.string().required(),
     })
