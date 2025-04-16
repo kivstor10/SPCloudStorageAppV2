@@ -17,7 +17,7 @@ const schema = a.schema({
       deviceId: a.string().required(),
       registrationCode: a.string(),
     })
-    .authorization((allow: any) => [ // Explicitly type 'allow' (though 'any' isn't ideal long-term)
+    .authorization((allow: any) => [ 
       allow.guest().to(["read"]),
       allow.authenticated().to(["read"]),
       allow.group("Admins").to(["create", "read", "update", "delete"]),
