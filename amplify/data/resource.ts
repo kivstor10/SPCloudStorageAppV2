@@ -6,29 +6,29 @@ const schema = a.schema({
       id: a.id(),
       filename: a.string().required(),
     })
-    .authorization((allow) => [
+    .authorization((allow: any) => [
       allow.guest().to(["read"]),
       allow.authenticated().to(["read"]),
       allow.group("Admins").to(["create", "read", "update", "delete"]),
     ]),
 
   DeviceRegistration: a
-    .model({ // Use a.type instead of a.model
+    .type({
       deviceId: a.string().required(),
       registrationCode: a.string(),
     })
-    .authorization((allow) => [
+    .authorization((allow: any) => [
       allow.guest().to(["read"]),
       allow.authenticated().to(["read"]),
       allow.group("Admins").to(["create", "read", "update", "delete"]),
     ]),
 
   UserDeviceLink: a
-    .model({ // Use a.type instead of a.model
+    .type({
       userId: a.string().required(),
       deviceId: a.string().required(),
     })
-    .authorization((allow) => [
+    .authorization((allow: any) => [
       allow.guest().to(["read"]),
       allow.authenticated().to(["read"]),
       allow.group("Admins").to(["create", "read", "update", "delete"]),
@@ -39,10 +39,14 @@ const schema = a.schema({
     .query()
     .arguments({ deviceId: a.string().required() })
     .returns(a.ref("DeviceRegistration"))
+    .authorization((allow: any) => [ 
+      allow.public().to(["read"]), 
+
+    ])
     .handler(
       a.handler.custom({
-        dataSource: "DeviceRegistrationsDataSource", // Reference the data source name from backend.ts
-        entry: "./resolvers/getDeviceRegistration.js", // Path to your custom resolver
+        dataSource: "SPCloudDeviceRegDataSource",
+        entry: "./resolvers/getDeviceRegistration.js",
       })
     ),
 
@@ -53,8 +57,8 @@ const schema = a.schema({
     .returns(a.ref("UserDeviceLink"))
     .handler(
       a.handler.custom({
-        dataSource: "UserDeviceLinksDataSource", // Reference the data source name from backend.ts
-        entry: "./resolvers/createUserDeviceLink.js", // Path to your custom resolver
+        dataSource: "UserDeviceLinksDataSource",
+        entry: "./resolvers/createUserDeviceLink.js",
       })
     ),
 });
