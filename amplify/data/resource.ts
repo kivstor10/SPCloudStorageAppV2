@@ -2,7 +2,6 @@ import {
   type ClientSchema, 
   a, 
   defineData,
-  defineFunction
 } from '@aws-amplify/backend';
 
 
@@ -45,7 +44,7 @@ const schema = a.schema({
     .handler(
       a.handler.custom({
         dataSource: "DeviceRegistrationsDataSource",
-        entry: "./handlers/getDeviceRegistration.js",
+        entry: "./handlers/getReg.js",
       })
     ),
 
@@ -60,7 +59,7 @@ const schema = a.schema({
     .authorization(allow => [allow.publicApiKey()])
     .handler(a.handler.custom({
       dataSource: "UserDeviceLinksDataSource",
-      entry: "./handlers/createUserDeviceLink.js",
+      entry: "./handlers/updateLink.js",
     }),
   ),
 });
