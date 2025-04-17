@@ -24,7 +24,7 @@ const schema = a.schema({
       registrationCode: a.string(),
     })
     .authorization((allow) => [
-      allow.publicApiKey().to(['create', 'update', 'delete', 'list', 'sync']),
+      allow.publicApiKey().to(['read']),
     ]),
 
   // Type for User Device Links (interacting with existing DynamoDB via custom resolvers)
