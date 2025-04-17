@@ -40,7 +40,7 @@ const schema = a.schema({
     .authorization(allow => [allow.publicApiKey()])
     .handler(
       a.handler.custom({
-        dataSource: "SPCloudDeviceReg",
+        dataSource: "SPCloudDeviceRegDataSource",
         entry: "./resolvers/getReg.js",
       })
     ),
@@ -55,7 +55,7 @@ const schema = a.schema({
     .returns(a.ref("UserDeviceLink"))
     .authorization(allow => [allow.publicApiKey()])
     .handler(a.handler.custom({
-      dataSource: "SPCloudUserDeviceLinks",
+      dataSource: "SPCloudUserDeviceLinksDataSource",
       entry: "./resolvers/updateLink.js",
     }),
     ),
