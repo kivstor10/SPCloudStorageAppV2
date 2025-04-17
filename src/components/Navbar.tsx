@@ -46,7 +46,7 @@ const Navbar: React.FC<NavBarProps> = ({ isConnected, setIsConnected }) => {
         <img src={DeviceConnected} alt="Device Connected Icon" /> : 
         <img src={DeviceDisconnected} alt="Device Disconnected Icon" />
       }
-      {isConnected ? 'Device Connected' : 'Connect device'}
+      {isConnected ? 'Device Connected' : 'Connect Device'}
       </a>
 
       <div className="personalPreferances">
