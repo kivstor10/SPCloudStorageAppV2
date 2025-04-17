@@ -17,6 +17,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^7.0.1",
     "@mui/material": "^7.0.1",
+    "amplify-cli": "^1.0.0",
     "aws-amplify": "^6.13.2",
     "aws-cdk-lib": "^2.189.1",
     "react": "^19.0.0",

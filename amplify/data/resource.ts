@@ -33,7 +33,7 @@ const schema = a.schema({
 
 
   // Custom query for DeviceRegistration (DynamoDB)
-  getDeviceRegistration: a
+  getSPCloudDeviceReg: a
     .query()
     .arguments({ deviceId: a.string().required() })
     .returns(a.ref("DeviceRegistration"))
@@ -46,7 +46,7 @@ const schema = a.schema({
     ),
 
   // Custom mutation for UserDeviceLink (DynamoDB)
-  createUserDeviceLink: a
+  updateSPCloudUserDeviceLinks: a
     .mutation()
     .arguments({
       userId: a.string().required(),
