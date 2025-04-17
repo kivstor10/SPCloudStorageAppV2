@@ -25,7 +25,7 @@ const deviceRegistrationsTable = aws_dynamodb.Table.fromTableName(
 );
 
 backend.data.addDynamoDbDataSource(
-  'DeviceRegistrationsDataSource', 
+  'SPCloudDeviceReg', 
   deviceRegistrationsTable
 );
 
@@ -37,6 +37,6 @@ const userDeviceLinksTable = aws_dynamodb.Table.fromTableName(
 );
 
 backend.data.addDynamoDbDataSource(
-  'UserDeviceLinksDataSource', 
+  'SPCloudUserDeviceLinks', 
   userDeviceLinksTable
 );

@@ -55,7 +55,7 @@ const schema = a.schema({
     .returns(a.ref("UserDeviceLink"))
     .authorization(allow => [allow.publicApiKey()])
     .handler(a.handler.custom({
-      dataSource: "SPCloudUserDeviceLinkSource",
+      dataSource: "SPCloudUserDeviceLinks",
       entry: "./resolvers/updateLink.js",
     }),
     ),
