@@ -1,10 +1,8 @@
-import { 
-  type ClientSchema, 
-  a, 
+import {
+  type ClientSchema,
+  a,
   defineData,
 } from '@aws-amplify/backend';
-
-
 
 const schema = a.schema({
   // Model for S3-backed Audio Files
@@ -25,7 +23,9 @@ const schema = a.schema({
       deviceId: a.string().required(),
       registrationCode: a.string(),
     })
-    .authorization((allow) => [allow.publicApiKey()]),
+    .authorization((allow) => [
+      allow.publicApiKey().to(['create', 'update', 'delete', 'list', 'sync']),
+    ]),
 
   // Type for User Device Links (interacting with existing DynamoDB via custom resolvers)
   UserDeviceLink: a
@@ -44,24 +44,24 @@ const schema = a.schema({
     .handler(
       a.handler.custom({
         dataSource: "DeviceRegistrationsDataSource",
-        entry: "./handlers/getReg.js",
+        entry: "./resolvers/getReg.js",
       })
     ),
 
   // Custom mutation for UserDeviceLink (DynamoDB)
   createUserDeviceLink: a
     .mutation()
-    .arguments({ 
-      userId: a.string().required(), 
-      deviceId: a.string().required() 
+    .arguments({
+      userId: a.string().required(),
+      deviceId: a.string().required()
     })
     .returns(a.ref("UserDeviceLink"))
     .authorization(allow => [allow.publicApiKey()])
     .handler(a.handler.custom({
       dataSource: "UserDeviceLinksDataSource",
-      entry: "./handlers/updateLink.js",
+      entry: "./resolvers/updateLink.js",
     }),
-  ),
+    ),
 });
 
 export type Schema = ClientSchema<typeof schema>;
