@@ -57,6 +57,7 @@ const schema = a.schema({
       deviceId: a.string().required() 
     })
     .returns(a.ref("UserDeviceLink"))
+    .authorization(allow => [allow.publicApiKey()])
     .handler(a.handler.custom({
       dataSource: "UserDeviceLinksDataSource",
       entry: "./handlers/createUserDeviceLink.js",
