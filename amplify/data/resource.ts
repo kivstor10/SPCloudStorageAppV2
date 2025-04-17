@@ -6,15 +6,6 @@ import {
 } from '@aws-amplify/backend';
 
 
-const createUserDeviceLink = defineFunction({
-  entry: './resolvers/createUserDeviceLink.ts'
-})
-
-const getDeviceRegistration = defineFunction({
-  entry: './resolvers/getDeviceRegistration.ts'
-})
-
-
 
 const schema = a.schema({
   // Model for S3-backed Audio Files
@@ -50,15 +41,27 @@ const schema = a.schema({
     .query()
     .arguments({ deviceId: a.string().required() })
     .returns(a.ref("DeviceRegistration"))
-    .authorization((allow) => [/* ... */])
-    .handler(a.handler.function(getDeviceRegistration)),
+    .authorization(allow => [allow.publicApiKey()])
+    .handler(
+      a.handler.custom({
+        dataSource: "DeviceRegistrationsDataSource",
+        entry: "./handlers/getDeviceRegistration.js",
+      })
+    ),
 
   // Custom mutation for UserDeviceLink (DynamoDB)
   createUserDeviceLink: a
     .mutation()
-    .arguments({ userId: a.string().required(), deviceId: a.string().required() })
+    .arguments({ 
+      userId: a.string().required(), 
+      deviceId: a.string().required() 
+    })
     .returns(a.ref("UserDeviceLink"))
-    .handler(a.handler.function(createUserDeviceLink)),
+    .handler(a.handler.custom({
+      dataSource: "UserDeviceLinksDataSource",
+      entry: "./handlers/createUserDeviceLink.js",
+    }),
+  ),
 });
 
 export type Schema = ClientSchema<typeof schema>;
