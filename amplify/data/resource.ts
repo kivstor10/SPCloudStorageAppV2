@@ -19,21 +19,18 @@ const schema = a.schema({
 
   // Model for Device Registrations (backed by DynamoDB via DataStore)
   DeviceRegistration: a
-    .model({
+    .customType({
       deviceId: a.string().required(),
       registrationCode: a.string(),
-    })
-    .authorization((allow) => [
-      allow.publicApiKey().to(['read']),
-    ]),
+    }),
 
   // Type for User Device Links (interacting with existing DynamoDB via custom resolvers)
   UserDeviceLink: a
-    .model({
+    .customType({
       userId: a.string().required(),
       deviceId: a.string().required(),
-    })
-    .authorization((allow) => [allow.publicApiKey()]),
+    }),
+
 
   // Custom query for DeviceRegistration (DynamoDB)
   getDeviceRegistration: a
