@@ -10,18 +10,21 @@ import { signOut } from 'aws-amplify/auth';
 import { useTheme } from '../contexts/ThemeContext';
 import ConnectDeviceDialog from '../components/ConnectDeviceDialog'; // Import the connect dialog
 import DisconnectDeviceDialog from '../components/DisconnectDeviceDialog'; // Import the disconnect dialog
+import { useAuthenticator } from '@aws-amplify/ui-react';
 
 interface NavBarProps {
   isConnected: boolean;
   setIsConnected?: React.Dispatch<React.SetStateAction<boolean>>;
-  onDeviceConnect?: (code: string) => void;
-  onDeviceDisconnect?: () => void; // Optional callback for device disconnection
+  onDeviceConnect?: (code: string, userId: string | undefined) => void; // Expect userId
+  onDeviceDisconnect?: () => void;
 }
 
 const Navbar: React.FC<NavBarProps> = ({ isConnected, setIsConnected, onDeviceConnect, onDeviceDisconnect }) => {
   const { isDark, toggleTheme } = useTheme();
   const [isConnectDialogOpen, setIsConnectDialogOpen] = useState(false);
   const [isDisconnectDialogOpen, setIsDisconnectDialogOpen] = useState(false);
+  const { user } = useAuthenticator((context) => [context.user]); // Use the hook
+  const userIdToSend = user?.userId; 
 
   const handleOpenConnectDialog = () => {
     setIsConnectDialogOpen(true);
@@ -40,7 +43,7 @@ const Navbar: React.FC<NavBarProps> = ({ isConnected, setIsConnected, onDeviceCo
   };
 
   const handleConnect = (code: string) => {
-    console.log('Connecting with code:', code);
+    console.log('Connecting with code:', code, 'and userId:', userIdToSend);
     // Simulate successful connection
     setTimeout(() => {
       if (setIsConnected) {
@@ -48,8 +51,8 @@ const Navbar: React.FC<NavBarProps> = ({ isConnected, setIsConnected, onDeviceCo
       }
       setIsConnectDialogOpen(false);
     }, 1500);
-    if (onDeviceConnect) {
-      onDeviceConnect(code);
+    if (onDeviceConnect && userIdToSend) { // Ensure userIdToSend is available
+      onDeviceConnect(code, userIdToSend); // Pass userId
     }
   };
 
@@ -131,6 +134,7 @@ const Navbar: React.FC<NavBarProps> = ({ isConnected, setIsConnected, onDeviceCo
         open={isConnectDialogOpen}
         onClose={handleCloseConnectDialog}
         onConnect={handleConnect}
+        userId={userIdToSend} // You can still pass it down as a prop if needed elsewhere in the dialog
       />
 
       <DisconnectDeviceDialog

@@ -13,9 +13,10 @@ interface ConnectDeviceDialogProps {
   open: boolean;
   onClose: () => void;
   onConnect: (code: string) => void;
+  userId: string | undefined | null; 
 }
 
-export default function ConnectDeviceDialog({ open, onClose, onConnect }: ConnectDeviceDialogProps) {
+export default function ConnectDeviceDialog({ open, onClose, onConnect, userId }: ConnectDeviceDialogProps) {
   const [code, setCode] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [verificationError, setVerificationError] = useState<string | null>(null);
@@ -28,9 +29,10 @@ export default function ConnectDeviceDialog({ open, onClose, onConnect }: Connec
     const apiUrl = 'https://q88recf690.execute-api.eu-west-2.amazonaws.com/dev';
 
     console.log('Code on submit:', code); 
+    console.log('User ID:', userId); 
 
     try {
-      const response = await fetch(`${apiUrl}/verify-reg-code?regCode=${code.toUpperCase()}`);
+      const response = await fetch(`${apiUrl}/verify-reg-code?regCode=${code.toUpperCase()}&userId=${userId}`);
       const data = await response.json();
 
       if (response.ok && data && data.deviceId) {
