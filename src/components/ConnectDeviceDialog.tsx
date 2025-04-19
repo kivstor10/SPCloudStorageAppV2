@@ -18,16 +18,34 @@ interface ConnectDeviceDialogProps {
 export default function ConnectDeviceDialog({ open, onClose, onConnect }: ConnectDeviceDialogProps) {
   const [code, setCode] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
+  const [verificationError, setVerificationError] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsVerifying(true);
-    // Simulate code verification process
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    onConnect(code);
-    setIsVerifying(false);
-    onClose();
-    setCode('');
+    setVerificationError(null);
+
+    const apiUrl = 'https://q88recf690.execute-api.eu-west-2.amazonaws.com/dev';
+
+    console.log('Code on submit:', code); 
+
+    try {
+      const response = await fetch(`${apiUrl}/verify-reg-code?regCode=${code.toUpperCase()}`);
+      const data = await response.json();
+
+      if (response.ok && data && data.deviceId) {
+        onConnect(data.deviceId); 
+        onClose();
+        setCode('');
+      } else {
+        setVerificationError(data?.error || 'Invalid registration code.');
+      }
+    } catch (error) {
+      console.error('Error verifying code:', error);
+      setVerificationError('Failed to verify registration code.');
+    } finally {
+      setIsVerifying(false);
+    }
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,20 +53,20 @@ export default function ConnectDeviceDialog({ open, onClose, onConnect }: Connec
   };
 
   return (
-      <Dialog
-        open={open}
-        onClose={onClose}
-        slotProps={{
+    <Dialog
+      open={open}
+      onClose={onClose}
+      slotProps={{
         paper: {
-            component: 'form',
-            onSubmit: handleSubmit,
-            sx: { // Apply custom styles to the Dialog's Paper component
+          component: 'form',
+          onSubmit: handleSubmit,
+          sx: { 
             backgroundColor: 'var(--background-primary)',
             color: 'var(--text-primary)',
-            },
           },
-        }}
-      >
+        },
+      }}
+    >
       <DialogTitle>Connect Device</DialogTitle>
       <DialogContent>
         <DialogContentText sx={{ color: 'var(--text-primary)' }}>
@@ -80,25 +98,26 @@ export default function ConnectDeviceDialog({ open, onClose, onConnect }: Connec
             '& .MuiInput-underline:after': {
               borderColor: 'var(--text-primary)',
             },
-            '& .MuiInputLabel-root.Mui-focused': { 
-                color: '#F28E32', 
+            '& .MuiInputLabel-root.Mui-focused': {
+              color: '#F28E32',
             },
           }}
         />
+        {verificationError && <div style={{ color: 'red', marginTop: '10px' }}>{verificationError}</div>}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} sx={{ color: '#F28E32' }}>Cancel</Button>
-        <Button 
-            type="submit" 
-            disabled={isVerifying || code.length !== 6} 
-              sx={{
-                color: '#F28E32', // Default color
-                '&.Mui-disabled': { // Target the disabled state
-                  color: '#A46122',
-                },
-              }}
-            >
-        {isVerifying ? <span style={{ color: '#F28E32' }}>Verifying...</span> : 'Connect'}
+        <Button
+          type="submit"
+          disabled={isVerifying || code.length !== 6}
+          sx={{
+            color: '#F28E32', 
+            '&.Mui-disabled': { 
+              color: '#A46122',
+            },
+          }}
+        >
+          {isVerifying ? <span style={{ color: '#F28E32' }}>Verifying...</span> : 'Connect'}
         </Button>
       </DialogActions>
     </Dialog>
