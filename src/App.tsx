@@ -20,7 +20,7 @@ const AdminRoutes = () => (
 
     <Routes>
       <Route path="/log" element={<AdminLog />} />
-      <Route path="/usermanagement:id" element={<UserManagement />} />
+      <Route path="/usermanagement" element={<UserManagement />} />
     </Routes>
 
 );
