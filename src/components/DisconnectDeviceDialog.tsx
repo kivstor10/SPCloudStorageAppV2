@@ -22,7 +22,7 @@ const DisconnectDeviceDialog: React.FC<DisconnectDeviceDialogProps> = ({ open, o
       aria-describedby="disconnect-device-dialog-description"
       slotProps={{
         paper: {
-          sx: { // Apply custom styles to the Dialog's Paper component
+          sx: { 
             backgroundColor: 'var(--background-primary)',
             color: 'var(--text-primary)',
           },

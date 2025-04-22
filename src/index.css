@@ -261,6 +261,7 @@ button {
   display: flex;
   bottom: 20px;
   right: 15px;
+  cursor: pointer;
 }
 
 .uploadLoadoutButton > h2{

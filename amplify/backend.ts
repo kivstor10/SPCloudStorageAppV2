@@ -20,23 +20,35 @@ const externalDataSourcesStack = backend.createStack('ExternalDataSources');
 // Define the DeviceRegistrations table
 const deviceRegistrationsTable = aws_dynamodb.Table.fromTableName(
   externalDataSourcesStack,
-  'DeviceRegistrationsTable', 
-  'SPCloudDeviceReg' 
+  'DeviceRegistrationsTable',
+  'SPCloudDeviceReg'
 );
 
 backend.data.addDynamoDbDataSource(
-  'SPCloudDeviceRegDataSource', 
+  'SPCloudDeviceRegDataSource',
   deviceRegistrationsTable
 );
 
 // Define the SPCloudUserDeviceLinks table
 const userDeviceLinksTable = aws_dynamodb.Table.fromTableName(
   externalDataSourcesStack,
-  'UserDeviceLinksTable', 
+  'UserDeviceLinksTable',
   'SPCloudUserDeviceLinks'
 );
 
 backend.data.addDynamoDbDataSource(
-  'SPCloudUserDeviceLinksDataSource', 
+  'SPCloudUserDeviceLinksDataSource',
   userDeviceLinksTable
+);
+
+// Define the UserLoadouts table
+const userLoadoutsTable = aws_dynamodb.Table.fromTableName(
+  externalDataSourcesStack,
+  'UserLoadoutsTable',
+  'UserLoadouts'
+);
+
+backend.data.addDynamoDbDataSource(
+  'UserLoadoutsDataSource',
+  userLoadoutsTable
 );
