@@ -13,16 +13,6 @@ import DisconnectDeviceDialog from '../components/DisconnectDeviceDialog';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 
 
-// const SPCloudCheckIfUserHasDeviceLinkAPI = async (userId: string | undefined): Promise<{ isLinked: boolean; deviceId?: string }> => {
-
-//     await new Promise(resolve => setTimeout(resolve, 500));
-
-//     if (!userId) {
-//         throw new Error("userId is undefined");
-//     }
-//     return { isLinked: true, deviceId: '54814876EFD0' };
-
-// };
 
 interface NavBarProps {
     onDeviceConnect?: (code: string, userId: string | undefined) => void;
@@ -52,7 +42,6 @@ const Navbar: React.FC<NavBarProps> = ({ onDeviceConnect, onDeviceDisconnect }) 
                 `https://hf3d4zck7j.execute-api.eu-west-2.amazonaws.com/dev/check-user-link?userId=${userId}`
             ).then(res => res.json());
 
-            console.log("checkDeviceLink API Response:", response);
             setIsDeviceLinked(response.isLinked);
         } catch (err: any) {
             setError(err.message || 'Failed to check device connection.');
@@ -83,8 +72,7 @@ const Navbar: React.FC<NavBarProps> = ({ onDeviceConnect, onDeviceDisconnect }) 
     };
 
     const handleConnect = (code: string) => {
-        console.log('Connecting with code:', code, 'and userId:', userId);
-        setIsDeviceLinked(true); // Optimistically update
+        setIsDeviceLinked(true);
         setIsConnectDialogOpen(false);
         if (onDeviceConnect && userId) {
             onDeviceConnect(code, userId);
