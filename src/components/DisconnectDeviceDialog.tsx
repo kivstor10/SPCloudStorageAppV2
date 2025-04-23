@@ -5,7 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Typography from '@mui/material/Typography'; // Import Typography
+import Typography from '@mui/material/Typography'; 
 
 interface DisconnectDeviceDialogProps {
     open: boolean;
@@ -29,7 +29,7 @@ const DisconnectDeviceDialog: React.FC<DisconnectDeviceDialogProps> = ({ open, o
 
         try {
             const response = await fetch(
-                `https://y7wqcp2aol.execute-api.eu-west-2.amazonaws.com/dev/disconnect-device?userId=${userId}`, // Replace with your actual endpoint
+                `https://y7wqcp2aol.execute-api.eu-west-2.amazonaws.com/dev/disconnect-device?userId=${userId}`, 
                 {
                     method: 'DELETE',
                 }
