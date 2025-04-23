@@ -177,6 +177,7 @@ const Navbar: React.FC<NavBarProps> = ({ onDeviceConnect, onDeviceDisconnect }) 
                 open={isDisconnectDialogOpen}
                 onClose={handleCloseDisconnectDialog}
                 onDisconnect={handleDisconnect}
+                userId={userId}
             />
         </div>
     );
