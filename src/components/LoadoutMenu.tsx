@@ -3,9 +3,7 @@ import LoadoutItem from './LoadoutItem';
 import AddNewIcon from '../assets/AddNewIcon.svg';
 import Snackbar from '@mui/material/Snackbar';
 
-interface LoadoutMenuProps {
-  isConnected: boolean;
-}
+
 
 interface Loadout {
   id: number;
@@ -13,7 +11,7 @@ interface Loadout {
   name: string;
 }
 
-const LoadoutMenu: React.FC<LoadoutMenuProps> = ({ isConnected }) => {
+const LoadoutMenu: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [loadouts, setLoadouts] = useState<Loadout[]>([{ 
     id: 1, 
@@ -54,10 +52,7 @@ const LoadoutMenu: React.FC<LoadoutMenuProps> = ({ isConnected }) => {
   };
 
   const handleUpload = () => {
-    if (!isConnected) {  
-      setOpen(true);
-      return;
-    }
+
     // Handle upload logic here   
   };
 
