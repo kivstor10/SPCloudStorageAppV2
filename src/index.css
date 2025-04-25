@@ -311,9 +311,9 @@ button {
 
 .MuiTypography-root > div:nth-child(2){
   display: flex;
-  place-content: end;
+  place-content: center;
   justify-items: center;
-  gap: 10px;
+  gap: 12px;
   margin: 20px 0;
 }
 
@@ -326,7 +326,7 @@ button {
   border-radius: 4px;
 }
 
-.MuiTypography-root > div:nth-child(2) > button:nth-child(3){
+.MuiTypography-root > div:nth-child(2) > button:nth-child(4){
   background-color: #F28E32;
   color: #242424;
 }

@@ -6,6 +6,8 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+//import Pause from '../assets/PauseIcon.svg';
+import Play from '../assets/PlayIcon.svg';
 
 // Create a mapping of all possible pad imports
 const padImports = {
@@ -87,6 +89,7 @@ const LoadoutPage: React.FC<LoadoutPageProps> = ({ }) => {
                   <div>Loading pads...</div>
                 )}
                 <div>
+                  <button><img src={Play}/></button>
                   <button>Import</button>
                   <button>Export</button>
                   <button>Delete</button>
