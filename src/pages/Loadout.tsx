@@ -6,7 +6,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-//import Pause from '../assets/PauseIcon.svg';
+import Pause from '../assets/PauseIcon.svg'; 
 import Play from '../assets/PlayIcon.svg';
 
 // Create a mapping of all possible pad imports
@@ -34,6 +34,7 @@ const LoadoutPage: React.FC<LoadoutPageProps> = ({ }) => {
                 "BANK F", "BANK G", "BANK H", "BANK I", "BANK J"];
   
   const [loadoutPads, setLoadoutPads] = React.useState<string[]>([]);
+  const [isPlaying, setIsPlaying] = React.useState(false); 
 
   React.useEffect(() => {
     // Load all pad images dynamically in a Vite-compatible way
@@ -46,6 +47,11 @@ const LoadoutPage: React.FC<LoadoutPageProps> = ({ }) => {
 
     loadImages();
   }, []);
+
+  const handlePlay = () => {
+    setIsPlaying((prev) => !prev); 
+    console.log(isPlaying ? "Paused" : "Playing");
+  };
 
   return (
     <div className="LoadoutPageContainer">
@@ -89,7 +95,9 @@ const LoadoutPage: React.FC<LoadoutPageProps> = ({ }) => {
                   <div>Loading pads...</div>
                 )}
                 <div>
-                  <button><img src={Play}/></button>
+                  <button onClick={handlePlay}>
+                    <img src={isPlaying ? Pause : Play} alt={isPlaying ? "Pause" : "Play"} />
+                  </button>
                   <button>Import</button>
                   <button>Export</button>
                   <button>Delete</button>

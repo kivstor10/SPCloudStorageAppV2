@@ -35,9 +35,9 @@ const LoadoutMenu: React.FC = () => {
 
             // Transform the API response to match the Loadout interface
             const transformedLoadouts = data.map((item: any) => ({
-                id: item.loadoutId.S,
-                active: item.loadoutId.S === 'default',
-                name: item.loadoutName.S,
+                id: item.loadoutId,
+                active: item.loadoutId === 'default',
+                name: item.loadoutName,
             }));
             setLoadouts(transformedLoadouts);
         } catch (err: any) {
@@ -96,11 +96,19 @@ const LoadoutMenu: React.FC = () => {
     };
 
     if (loading) {
-        return <div>Loading loadouts...</div>;
+        return (
+            <div className="LoadoutMenuContainer">
+                <div>Loading loadouts...</div>
+            </div>
+        );
     }
 
     if (error) {
-        return <div>Error: {error}</div>;
+        return (
+            <div className="LoadoutMenuContainer">
+                <div>Error: {error}</div>
+            </div>
+        )
     }
 
     return (
