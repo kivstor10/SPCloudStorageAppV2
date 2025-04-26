@@ -9,13 +9,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Pause from '../assets/PauseIcon.svg';
 import Play from '../assets/PlayIcon.svg';
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import { uploadData } from "aws-amplify/storage"; // Import remove
-import Button from '@mui/material/Button'; // Import Material UI Button
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { uploadData } from "aws-amplify/storage"; 
+import DeleteDialog from "../components/DeleteDialog"; 
 
 
 // Create a mapping of all possible pad imports
@@ -32,56 +27,6 @@ const padImports = {
     pad10: () => import("../assets/10.svg"),
     pad11: () => import("../assets/11.svg"),
     pad12: () => import("../assets/12.svg"),
-};
-
-interface DeleteDialogProps {
-    open: boolean;
-    onClose: () => void;
-    onDelete: () => void;
-    padNumber: number | null; // Add padNumber
-}
-
-const DeleteDialog: React.FC<DeleteDialogProps> = ({ open, onClose, onDelete, padNumber }) => {
-
-    return (
-        <Dialog
-            open={open}
-            onClose={onClose}
-            aria-labelledby="disconnect-device-dialog-title"
-            aria-describedby="disconnect-device-dialog-description"
-            slotProps={{
-                paper: {
-                    sx: {
-                        backgroundColor: '#DECFC2',
-                        color: '#231F20',
-                    },
-                },
-            }}
-        >
-            <DialogTitle id="disconnect-device-dialog-title">
-                Delete file
-            </DialogTitle>
-            <DialogContent>
-                <DialogContentText
-                    id="disconnect-device-dialog-description"
-                    sx={{ color: 'var(--text-primary)' }}
-                >
-                    Are you sure you want to delete pad {padNumber}?
-
-                </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose} sx={{ color: '#F28E32' }}>Cancel</Button>
-                <Button
-                    onClick={onDelete}
-                    sx={{ color: '#F28E32' }}
-
-                >
-                    Delete
-                </Button>
-            </DialogActions>
-        </Dialog>
-    );
 };
 
 
