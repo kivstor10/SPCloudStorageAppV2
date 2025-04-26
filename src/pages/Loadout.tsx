@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react"; // Added useCallback
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -9,9 +9,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Pause from '../assets/PauseIcon.svg';
 import Play from '../assets/PlayIcon.svg';
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import { uploadData } from "aws-amplify/storage"; 
-import DeleteDialog from "../components/DeleteDialog"; 
-
+import { uploadData } from "aws-amplify/storage";
+import DeleteDialog from "../components/DeleteDialog";
 
 // Create a mapping of all possible pad imports
 const padImports = {
@@ -29,7 +28,6 @@ const padImports = {
     pad12: () => import("../assets/12.svg"),
 };
 
-
 const LoadoutPage: React.FC = ({ }) => {
     const { user } = useAuthenticator((context) => [context.user]);
     const userId = user?.userId;
@@ -44,6 +42,8 @@ const LoadoutPage: React.FC = ({ }) => {
     const [loadingName, setLoadingName] = useState(true);
     const [errorName, setErrorName] = useState<string | null>(null);
     const [selectedPadElement, setSelectedPadElement] = useState<HTMLDivElement | null>(null);
+    const [selectedPadNumber, setSelectedPadNumber] = useState<number | null>(null); // Track the selected pad number
+    const [selectedBank, setSelectedBank] = useState<string | null>(null); // Track the selected bank
 
     const [file, setFile] = useState<File | undefined>();
     const [uploadProgress, setUploadProgress] = useState<number | null>(null);
@@ -66,7 +66,7 @@ const LoadoutPage: React.FC = ({ }) => {
         loadImages();
     }, []);
 
-    const handlePadSelect = (event: React.MouseEvent<HTMLDivElement>) => {
+    const handlePadSelect = (event: React.MouseEvent<HTMLDivElement>, padNumber: number, bank: string) => { // Add bank
         const clickedDiv = event.currentTarget;
 
         if (selectedPadElement) {
@@ -75,6 +75,8 @@ const LoadoutPage: React.FC = ({ }) => {
 
         clickedDiv.classList.add('selected');
         setSelectedPadElement(clickedDiv);
+        setSelectedPadNumber(padNumber); // Store the pad number
+        setSelectedBank(bank); // Store the bank
         // console.log("Selected Pad:", clickedDiv);
     };
 
@@ -144,10 +146,6 @@ const LoadoutPage: React.FC = ({ }) => {
         if (padToDelete !== null) {
             setIsUploading(true);
             try {
-                // Construct a key,  This part is crucial and depends on how your files are named.
-                // const key = `pad${padToDelete}.svg`; //  adjust the key
-
-                // remove from the loadoutPads state
                 setLoadoutPads(prevPads => {
                     const newPads = [...prevPads];
                     newPads.splice(padToDelete - 1, 1);  // -1 because arrays are 0-indexed
@@ -166,43 +164,44 @@ const LoadoutPage: React.FC = ({ }) => {
         }
     };
 
-    useEffect(() => {
-        if (file) {
-            // Only start upload if a file has been selected
-            const performUpload = async () => {
-                setIsUploading(true); // set state
-                try {
-                    const result = await uploadData({
-                        path: "",
-                        data: file,
-                        options: {
-                            onProgress: ({ transferredBytes, totalBytes }) => {
-                                if (totalBytes) {
-                                    const progress = Math.round((transferredBytes / totalBytes) * 100);
-                                    console.log(`Upload progress ${progress} %`);
-                                    setUploadProgress(progress);
-                                }
-                            },
-                            bucket: {
-                                bucketName: 'assignedNameInAmplifyBackend',
-                                region: 'eu-west-2',
+    const performUpload = useCallback(async () => {
+        if (file && selectedPadNumber && selectedBank && loadoutIdFromRoute) {
+            setIsUploading(true);
+            try {
+                // Construct the key as: loadoutId/Bank[A-J]/pad[1-12].svg
+                const key = `${loadoutIdFromRoute}/Bank${selectedBank}/pad${selectedPadNumber}.svg`;
+
+                const result = await uploadData({
+                    key: key,
+                    data: file,
+                    options: {
+                        onProgress: ({ transferredBytes, totalBytes }) => {
+                            if (totalBytes) {
+                                const progress = Math.round((transferredBytes / totalBytes) * 100);
+                                console.log(`Upload progress ${progress} %`);
+                                setUploadProgress(progress);
                             }
                         },
-                    }).result;
-                    console.log("Upload result", result);
-                    setIsUploading(false);
-                    alert("File uploaded successfully!");
-                } catch (error: any) {
-                    console.error("Error uploading file:", error);
-                    setErrorName("Failed to upload file. Please try again.");
-                    setIsUploading(false);
-                } finally {
-                    setFile(undefined); // clear file
-                }
-            };
-            performUpload();
+                        bucket: 'SPCloudBucket', // Use the bucketName
+                    },
+                }).result;
+                console.log("Upload result", result);
+                setIsUploading(false);
+                alert("File uploaded successfully!");
+            } catch (error: any) {
+                console.error("Error uploading file:", error);
+                setErrorName("Failed to upload file. Please try again.");
+                setIsUploading(false);
+            } finally {
+                setFile(undefined); // clear file
+            }
         }
-    }, [file]);
+    }, [file, selectedPadNumber, selectedBank, loadoutIdFromRoute]);
+
+
+    useEffect(() => {
+        performUpload();
+    }, [performUpload]);
 
 
     return (
@@ -241,7 +240,11 @@ const LoadoutPage: React.FC = ({ }) => {
                                 {loadoutPads.length > 0 ? (
                                     <div className="loadoutPadsContainer">
                                         {loadoutPads.map((pad, padIndex) => (
-                                            <div key={padIndex} onClick={handlePadSelect} className="loadoutPad">
+                                            <div
+                                                key={padIndex}
+                                                onClick={(e) => handlePadSelect(e, padIndex + 1, bank.slice(-1))} // Pass padIndex + 1 and bank letter
+                                                className="loadoutPad"
+                                            >
                                                 <img src={pad} alt={`Loadout Pad ${padIndex + 1}`} />
                                             </div>
                                         ))}
@@ -268,8 +271,12 @@ const LoadoutPage: React.FC = ({ }) => {
                                             Upload Progress: {uploadProgress}%
                                         </div>
                                     )}
+                                    <button onClick={() => {
+                                        if (selectedPadNumber !== null) {
+                                            handleStartDelete(selectedPadNumber);
+                                        }
+                                    }}>Delete</button>
                                     <button>Export</button>
-                                    <button onClick={() => handleStartDelete(1)}>Delete</button>  {/* Here */}
                                 </div>
                             </Typography>
                         </AccordionDetails>
