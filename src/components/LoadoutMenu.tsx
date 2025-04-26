@@ -36,7 +36,7 @@ const LoadoutMenu: React.FC = () => {
             // Transform the API response to match the Loadout interface
             const transformedLoadouts = data.map((item: any) => ({
                 id: item.loadoutId,
-                active: item.loadoutId === 'default',
+                active: item.active,  // Use the active property from the API response
                 name: item.loadoutName,
             }));
             setLoadouts(transformedLoadouts);

@@ -29,7 +29,7 @@ const Navbar: React.FC<NavBarProps> = ({ onDeviceConnect, onDeviceDisconnect }) 
     const { user } = useAuthenticator((context) => [context.user]);
     const userId = user?.userId;
 
-    console.log("UserId: " + userId);
+    // console.log("UserId: " + userId);
 
     const checkDeviceLink = async () => {
         if (!userId) {

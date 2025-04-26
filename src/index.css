@@ -351,6 +351,9 @@ button {
   height: 20px;
 }
 
+.loadoutPad.selected{
+  background-color: #F28E32;
+}
 
 .welcome-page-container{
   display: flex;
