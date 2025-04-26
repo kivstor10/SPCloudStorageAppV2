@@ -12,8 +12,6 @@ import ConnectDeviceDialog from '../components/ConnectDeviceDialog';
 import DisconnectDeviceDialog from '../components/DisconnectDeviceDialog';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 
-
-
 interface NavBarProps {
     onDeviceConnect?: (code: string, userId: string | undefined) => void;
     onDeviceDisconnect?: () => void;
