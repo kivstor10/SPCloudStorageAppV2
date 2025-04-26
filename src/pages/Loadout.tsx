@@ -9,7 +9,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Pause from '../assets/PauseIcon.svg';
 import Play from '../assets/PlayIcon.svg';
 import { useAuthenticator } from '@aws-amplify/ui-react';
-import { uploadData, remove } from "aws-amplify/storage"; // Import remove
+import { uploadData } from "aws-amplify/storage"; // Import remove
 import Button from '@mui/material/Button'; // Import Material UI Button
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -200,7 +200,7 @@ const LoadoutPage: React.FC = ({ }) => {
             setIsUploading(true);
             try {
                 // Construct a key,  This part is crucial and depends on how your files are named.
-                const key = `pad${padToDelete}.svg`; //  adjust the key
+                // const key = `pad${padToDelete}.svg`; //  adjust the key
 
                 // remove from the loadoutPads state
                 setLoadoutPads(prevPads => {

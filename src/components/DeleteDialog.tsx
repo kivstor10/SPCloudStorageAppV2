@@ -29,8 +29,8 @@ const DeleteDialog: React.FC<DeleteDialog> = ({ open, onClose }) => {
             slotProps={{
                 paper: {
                     sx: {
-                        backgroundColor: 'var(--background-primary)',
-                        color: 'var(--text-primary)',
+                        backgroundColor: 'var(--background-primary)!important',
+                        color: 'var(--text-primary)!important',
                     },
                 },
             }}
@@ -41,7 +41,7 @@ const DeleteDialog: React.FC<DeleteDialog> = ({ open, onClose }) => {
             <DialogContent>
                 <DialogContentText
                     id="disconnect-device-dialog-description"
-                    sx={{ color: 'var(--text-primary)' }}
+                    sx={{ color: 'var(--text-primary)!important' }}
                 >
                     Are you sure you want to delete pad (pad number)?
 
