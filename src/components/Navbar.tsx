@@ -130,7 +130,7 @@ const Navbar: React.FC<NavBarProps> = ({ onDeviceConnect, onDeviceDisconnect }) 
         deviceStatusText = 'Device Connected';
         deviceStatusImage = DeviceConnected;
     } else {
-        deviceStatusText = 'Device Disconnected';
+        deviceStatusText = 'Connect Device';
         deviceStatusImage = DeviceDisconnected;
     }
 

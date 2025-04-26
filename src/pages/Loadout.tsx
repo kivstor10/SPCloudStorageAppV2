@@ -160,7 +160,7 @@ const LoadoutPage: React.FC = ({ }) => {
                                     <button onClick={handlePlay}>
                                         <img src={isPlaying ? Pause : Play} alt={isPlaying ? "Pause" : "Play"} />
                                     </button>
-                                    <button>Import</button>
+                                    <button>Upload</button>
                                     <button>Export</button>
                                     <button>Delete</button>
                                 </div>
