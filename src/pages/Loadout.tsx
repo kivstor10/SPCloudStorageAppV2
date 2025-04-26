@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import React, { useState, useEffect, useRef, useCallback } from "react"; // Added useCallback
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -12,7 +12,6 @@ import { useAuthenticator } from '@aws-amplify/ui-react';
 import { uploadData } from "aws-amplify/storage";
 import DeleteDialog from "../components/DeleteDialog";
 
-// Create a mapping of all possible pad imports
 const padImports = {
     pad1: () => import("../assets/1.svg"),
     pad2: () => import("../assets/2.svg"),
@@ -31,31 +30,33 @@ const padImports = {
 const LoadoutPage: React.FC = ({ }) => {
     const { user } = useAuthenticator((context) => [context.user]);
     const userId = user?.userId;
-    const { loadoutId: loadoutIdFromRoute } = useParams<{ loadoutId?: string }>(); // Get loadoutId from the route
+
+    console.log("UserId: " + userId);
+    
+    const { loadoutId: loadoutIdFromRoute } = useParams<{ loadoutId?: string }>();
 
     const banks = ["BANK A", "BANK B", "BANK C", "BANK D", "BANK E",
         "BANK F", "BANK G", "BANK H", "BANK I", "BANK J"];
 
     const [loadoutPads, setLoadoutPads] = useState<string[]>([]);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [loadoutName, setLoadoutName] = useState<string>("LOADOUT"); // Initial loadout name
+    const [loadoutName, setLoadoutName] = useState<string>("LOADOUT");
     const [loadingName, setLoadingName] = useState(true);
     const [errorName, setErrorName] = useState<string | null>(null);
     const [selectedPadElement, setSelectedPadElement] = useState<HTMLDivElement | null>(null);
-    const [selectedPadNumber, setSelectedPadNumber] = useState<number | null>(null); // Track the selected pad number
-    const [selectedBank, setSelectedBank] = useState<string | null>(null); // Track the selected bank
+    const [selectedPadNumber, setSelectedPadNumber] = useState<number | null>(null);
+    const [selectedBank, setSelectedBank] = useState<string | null>(null);
 
     const [file, setFile] = useState<File | undefined>();
     const [uploadProgress, setUploadProgress] = useState<number | null>(null);
     const [isUploading, setIsUploading] = useState(false);
-    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false); // State for delete dialog
-    const [padToDelete, setPadToDelete] = useState<number | null>(null); // Track which pad to delete
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [padToDelete, setPadToDelete] = useState<number | null>(null);
 
-    const fileInputRef = useRef<HTMLInputElement>(null); // Create a ref for the hidden input
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
 
     useEffect(() => {
-        // Load all pad images dynamically
         const loadImages = async () => {
             const images = await Promise.all(
                 Object.values(padImports).map(importer => importer().then(module => module.default))
@@ -66,7 +67,7 @@ const LoadoutPage: React.FC = ({ }) => {
         loadImages();
     }, []);
 
-    const handlePadSelect = (event: React.MouseEvent<HTMLDivElement>, padNumber: number, bank: string) => { // Add bank
+    const handlePadSelect = (event: React.MouseEvent<HTMLDivElement>, padNumber: number, bank: string) => {
         const clickedDiv = event.currentTarget;
 
         if (selectedPadElement) {
@@ -75,16 +76,12 @@ const LoadoutPage: React.FC = ({ }) => {
 
         clickedDiv.classList.add('selected');
         setSelectedPadElement(clickedDiv);
-        setSelectedPadNumber(padNumber); // Store the pad number
-        setSelectedBank(bank); // Store the bank
-        // console.log("Selected Pad:", clickedDiv);
+        setSelectedPadNumber(padNumber);
+        setSelectedBank(bank);
     };
 
 
     useEffect(() => {
-        // console.log("userId:", userId);
-        // console.log("loadoutIdFromRoute:", loadoutIdFromRoute);
-
         const fetchLoadoutName = async () => {
             if (userId && loadoutIdFromRoute) {
                 setLoadingName(true);
@@ -101,11 +98,10 @@ const LoadoutPage: React.FC = ({ }) => {
                     const data = await response.json();
                     console.log("API Response Data:", data);
 
-                    // Access the loadoutName from the first object in the array
                     if (Array.isArray(data) && data.length > 0 && data[0].loadoutName) {
                         setLoadoutName(data[0].loadoutName);
                     } else {
-                        setLoadoutName("LOADOUT"); // Fallback if data structure is unexpected
+                        setLoadoutName("LOADOUT");
                     }
 
                 } catch (err: any) {
@@ -123,17 +119,16 @@ const LoadoutPage: React.FC = ({ }) => {
 
     const handlePlay = () => {
         setIsPlaying((prev) => !prev);
-        // console.log(isPlaying ? "Paused" : "Playing");
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setFile(event.target.files?.[0]);
-        setUploadProgress(null); // Reset progress on new file selection
+        setUploadProgress(null);
     };
 
     const handleClick = async () => {
         if (fileInputRef.current) {
-            fileInputRef.current.click(); // Programmatically trigger the file input
+            fileInputRef.current.click();
         }
     };
 
@@ -148,7 +143,7 @@ const LoadoutPage: React.FC = ({ }) => {
             try {
                 setLoadoutPads(prevPads => {
                     const newPads = [...prevPads];
-                    newPads.splice(padToDelete - 1, 1);  // -1 because arrays are 0-indexed
+                    newPads.splice(padToDelete - 1, 1);
                     return newPads;
                 });
                 setIsUploading(false);
@@ -158,18 +153,17 @@ const LoadoutPage: React.FC = ({ }) => {
                 setErrorName("Failed to delete file. Please try again.");
                 setIsUploading(false);
             } finally {
-                setDeleteDialogOpen(false); // Close dialog
+                setDeleteDialogOpen(false);
                 setPadToDelete(null);
             }
         }
     };
 
     const performUpload = useCallback(async () => {
-        if (file && selectedPadNumber && selectedBank && loadoutIdFromRoute) {
+        if (file && selectedPadNumber && selectedBank && loadoutIdFromRoute && user) {
             setIsUploading(true);
             try {
-                // Construct the key as: loadoutId/Bank[A-J]/pad[1-12].svg
-                const key = `${loadoutIdFromRoute}/Bank${selectedBank}/pad${selectedPadNumber}.svg`;
+                const key = `public/${userId}/${loadoutIdFromRoute}/Bank${selectedBank}/pad${selectedPadNumber}`;
 
                 const result = await uploadData({
                     key: key,
@@ -182,7 +176,7 @@ const LoadoutPage: React.FC = ({ }) => {
                                 setUploadProgress(progress);
                             }
                         },
-                        bucket: 'SPCloudBucket', // Use the bucketName
+                        bucket: 'SPCloudBucket',
                     },
                 }).result;
                 console.log("Upload result", result);
@@ -193,15 +187,17 @@ const LoadoutPage: React.FC = ({ }) => {
                 setErrorName("Failed to upload file. Please try again.");
                 setIsUploading(false);
             } finally {
-                setFile(undefined); // clear file
+                setFile(undefined);
             }
         }
-    }, [file, selectedPadNumber, selectedBank, loadoutIdFromRoute]);
+    }, [file, selectedPadNumber, selectedBank, loadoutIdFromRoute, user]);
 
 
     useEffect(() => {
-        performUpload();
-    }, [performUpload]);
+        if (file && selectedPadNumber && selectedBank && loadoutIdFromRoute && user) {
+            performUpload();
+        }
+    }, [performUpload, file, selectedPadNumber, selectedBank, loadoutIdFromRoute, user]);
 
 
     return (
@@ -242,7 +238,7 @@ const LoadoutPage: React.FC = ({ }) => {
                                         {loadoutPads.map((pad, padIndex) => (
                                             <div
                                                 key={padIndex}
-                                                onClick={(e) => handlePadSelect(e, padIndex + 1, bank.slice(-1))} // Pass padIndex + 1 and bank letter
+                                                onClick={(e) => handlePadSelect(e, padIndex + 1, bank.slice(-1))}
                                                 className="loadoutPad"
                                             >
                                                 <img src={pad} alt={`Loadout Pad ${padIndex + 1}`} />
