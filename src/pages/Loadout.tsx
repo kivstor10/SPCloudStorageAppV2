@@ -160,12 +160,15 @@ const LoadoutPage: React.FC = ({ }) => {
     };
 
     const generateS3Key = useCallback(() => {
-        if (selectedBankLetter && selectedPadNumber && loadoutIdFromRoute && userId) {
-            const padNumberFormatted = String(selectedPadNumber).padStart(3, '0');
-            return `public/${userId}/${loadoutIdFromRoute}/${selectedBankLetter}${padNumberFormatted}.WAV`;
+        if (selectedBankLetter && selectedPadNumber && loadoutIdFromRoute && userId && file) {
+            const padNumberString = String(selectedPadNumber);
+            const paddingLength = 7 - padNumberString.length;
+            const padding = '0'.repeat(Math.max(0, paddingLength));
+            const fileExtension = file.name.split('.').pop()?.toLowerCase();
+            return `${userId}/${loadoutIdFromRoute}/${selectedBankLetter}${padding}${padNumberString}.${fileExtension}`;
         }
         return null;
-    }, [selectedBankLetter, selectedPadNumber, loadoutIdFromRoute, userId]);
+    }, [selectedBankLetter, selectedPadNumber, loadoutIdFromRoute, userId, file]);
 
     const performUpload = useCallback(async () => {
         if (file && selectedPadNumber && selectedBankLetter && loadoutIdFromRoute && user) {
@@ -269,7 +272,7 @@ const LoadoutPage: React.FC = ({ }) => {
                                         onChange={handleChange}
                                         style={{ display: 'none' }}
                                         ref={fileInputRef}
-                                        accept=".wav" // Limit to WAV files
+                                        accept=".wav,.mp3" // Accept both .wav and .mp3
                                     />
                                     <button onClick={handleClick} disabled={isUploading || !selectedPadNumber || !selectedBankLetter}>
                                         {isUploading ? 'Uploading...' : 'Upload'}
