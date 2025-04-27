@@ -353,7 +353,8 @@ button {
 }
 
 .loadoutPad.selected{
-  background-color: #F28E32;
+  border: 4px solid #258a25;
+  /* background-color: #F28E32; */
 }
 
 .welcome-page-container{

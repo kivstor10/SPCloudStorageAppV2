@@ -32,7 +32,7 @@ const LoadoutPage: React.FC = ({ }) => {
     const userId = user?.userId;
 
     console.log("UserId: " + userId);
-    
+
     const { loadoutId: loadoutIdFromRoute } = useParams<{ loadoutId?: string }>();
 
     const banks = ["BANK A", "BANK B", "BANK C", "BANK D", "BANK E",
@@ -45,7 +45,7 @@ const LoadoutPage: React.FC = ({ }) => {
     const [errorName, setErrorName] = useState<string | null>(null);
     const [selectedPadElement, setSelectedPadElement] = useState<HTMLDivElement | null>(null);
     const [selectedPadNumber, setSelectedPadNumber] = useState<number | null>(null);
-    const [selectedBank, setSelectedBank] = useState<string | null>(null);
+    const [selectedBankLetter, setSelectedBankLetter] = useState<string | null>(null);
 
     const [file, setFile] = useState<File | undefined>();
     const [uploadProgress, setUploadProgress] = useState<number | null>(null);
@@ -77,7 +77,7 @@ const LoadoutPage: React.FC = ({ }) => {
         clickedDiv.classList.add('selected');
         setSelectedPadElement(clickedDiv);
         setSelectedPadNumber(padNumber);
-        setSelectedBank(bank);
+        setSelectedBankLetter(bank.charAt(bank.length - 1)); // Extract the letter from "BANK A"
     };
 
 
@@ -159,45 +159,57 @@ const LoadoutPage: React.FC = ({ }) => {
         }
     };
 
-    const performUpload = useCallback(async () => {
-        if (file && selectedPadNumber && selectedBank && loadoutIdFromRoute && user) {
-            setIsUploading(true);
-            try {
-                const key = `public/${userId}/${loadoutIdFromRoute}/Bank${selectedBank}/pad${selectedPadNumber}`;
+    const generateS3Key = useCallback(() => {
+        if (selectedBankLetter && selectedPadNumber && loadoutIdFromRoute && userId) {
+            const padNumberFormatted = String(selectedPadNumber).padStart(3, '0');
+            return `public/${userId}/${loadoutIdFromRoute}/${selectedBankLetter}${padNumberFormatted}.WAV`;
+        }
+        return null;
+    }, [selectedBankLetter, selectedPadNumber, loadoutIdFromRoute, userId]);
 
-                const result = await uploadData({
-                    key: key,
-                    data: file,
-                    options: {
-                        onProgress: ({ transferredBytes, totalBytes }) => {
-                            if (totalBytes) {
-                                const progress = Math.round((transferredBytes / totalBytes) * 100);
-                                console.log(`Upload progress ${progress} %`);
-                                setUploadProgress(progress);
-                            }
+    const performUpload = useCallback(async () => {
+        if (file && selectedPadNumber && selectedBankLetter && loadoutIdFromRoute && user) {
+            setIsUploading(true);
+            const s3Key = generateS3Key();
+            if (s3Key) {
+                try {
+                    const result = await uploadData({
+                        key: s3Key,
+                        data: file,
+                        options: {
+                            onProgress: ({ transferredBytes, totalBytes }) => {
+                                if (totalBytes) {
+                                    const progress = Math.round((transferredBytes / totalBytes) * 100);
+                                    console.log(`Upload progress ${progress} %`);
+                                    setUploadProgress(progress);
+                                }
+                            },
+                            bucket: 'SPCloudBucket',
                         },
-                        bucket: 'SPCloudBucket',
-                    },
-                }).result;
-                console.log("Upload result", result);
+                    }).result;
+                    console.log("Upload result", result);
+                    setIsUploading(false);
+                    alert(`File uploaded to ${s3Key} successfully!`);
+                } catch (error: any) {
+                    console.error("Error uploading file:", error);
+                    setErrorName("Failed to upload file. Please try again.");
+                    setIsUploading(false);
+                } finally {
+                    setFile(undefined);
+                }
+            } else {
+                console.warn("Could not generate S3 key. Missing bank, pad number, or loadout ID.");
                 setIsUploading(false);
-                alert("File uploaded successfully!");
-            } catch (error: any) {
-                console.error("Error uploading file:", error);
-                setErrorName("Failed to upload file. Please try again.");
-                setIsUploading(false);
-            } finally {
-                setFile(undefined);
             }
         }
-    }, [file, selectedPadNumber, selectedBank, loadoutIdFromRoute, user]);
+    }, [file, selectedPadNumber, selectedBankLetter, loadoutIdFromRoute, user, generateS3Key]);
 
 
     useEffect(() => {
-        if (file && selectedPadNumber && selectedBank && loadoutIdFromRoute && user) {
+        if (file && selectedPadNumber && selectedBankLetter && loadoutIdFromRoute && user) {
             performUpload();
         }
-    }, [performUpload, file, selectedPadNumber, selectedBank, loadoutIdFromRoute, user]);
+    }, [performUpload, file, selectedPadNumber, selectedBankLetter, loadoutIdFromRoute, user]);
 
 
     return (
@@ -238,7 +250,7 @@ const LoadoutPage: React.FC = ({ }) => {
                                         {loadoutPads.map((pad, padIndex) => (
                                             <div
                                                 key={padIndex}
-                                                onClick={(e) => handlePadSelect(e, padIndex + 1, bank.slice(-1))}
+                                                onClick={(e) => handlePadSelect(e, padIndex + 1, bank)}
                                                 className="loadoutPad"
                                             >
                                                 <img src={pad} alt={`Loadout Pad ${padIndex + 1}`} />
@@ -257,9 +269,9 @@ const LoadoutPage: React.FC = ({ }) => {
                                         onChange={handleChange}
                                         style={{ display: 'none' }}
                                         ref={fileInputRef}
-                                        accept="*"
+                                        accept=".wav" // Limit to WAV files
                                     />
-                                    <button onClick={handleClick} disabled={isUploading}>
+                                    <button onClick={handleClick} disabled={isUploading || !selectedPadNumber || !selectedBankLetter}>
                                         {isUploading ? 'Uploading...' : 'Upload'}
                                     </button>
                                     {uploadProgress !== null && (
@@ -293,4 +305,3 @@ const LoadoutPage: React.FC = ({ }) => {
 };
 
 export default LoadoutPage;
-
