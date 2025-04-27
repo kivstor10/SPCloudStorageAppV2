@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import LoadoutItem from './LoadoutItem';
 import AddNewIcon from '../assets/AddNewIcon.svg';
-import Snackbar from '@mui/material/Snackbar';
 import { useAuthenticator } from '@aws-amplify/ui-react';
+import UploadLoadoutButton from './UploadLoadoutButton';
+import CircularProgress from '@mui/material/CircularProgress'; 
 
 interface Loadout {
     id: string;
@@ -11,13 +12,13 @@ interface Loadout {
 }
 
 const LoadoutMenu: React.FC = () => {
-    const { user } = useAuthenticator((context) => [context.user]); // Move hook to the top level
+    const { user } = useAuthenticator((context) => [context.user]);
     const userId = user?.userId;
 
-    const [open, setOpen] = useState(false);
     const [loadouts, setLoadouts] = useState<Loadout[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [selectedLoadoutName, setSelectedLoadoutName] = useState<string>('NEW LOADOUT');
 
     // Function to fetch loadouts from the API
     const fetchLoadouts = async (userId: string) => {
@@ -36,10 +37,21 @@ const LoadoutMenu: React.FC = () => {
             // Transform the API response to match the Loadout interface
             const transformedLoadouts = data.map((item: any) => ({
                 id: item.loadoutId,
-                active: item.active,  // Use the active property from the API response
+                active: item.active,
                 name: item.loadoutName,
             }));
             setLoadouts(transformedLoadouts);
+
+            // Set the initial selected loadout name
+            const activeLoadout: Loadout | undefined = transformedLoadouts.find((loadout: Loadout) => loadout.active);
+            if (activeLoadout) {
+                setSelectedLoadoutName(activeLoadout.name.toUpperCase());
+            } else if (transformedLoadouts.length > 0) {
+                setSelectedLoadoutName(transformedLoadouts[0].name.toUpperCase());
+            } else {
+                setSelectedLoadoutName('NEW LOADOUT');
+            }
+
         } catch (err: any) {
             setError(err.message || 'An error occurred while fetching loadouts.');
             console.error("Error fetching loadouts:", err);
@@ -56,12 +68,18 @@ const LoadoutMenu: React.FC = () => {
             setError("User not authenticated.");
             setLoading(false);
         }
-    }, [userId]); // Add userId as a dependency
+    }, [userId]);
 
-    const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
-        if (reason === 'clickaway') return;
-        setOpen(false);
-    };
+      useEffect(() => {
+        const activeLoadout = loadouts.find(loadout => loadout.active);
+        if (activeLoadout) {
+            setSelectedLoadoutName(activeLoadout.name.toUpperCase());
+        } else if (loadouts.length > 0) {
+            setSelectedLoadoutName(loadouts[0].name.toUpperCase());
+        } else {
+             setSelectedLoadoutName('NEW LOADOUT');
+        }
+    }, [loadouts]);
 
     const handleLoadoutClick = (id: string) => {
         setLoadouts(prev => prev.map(loadout => ({
@@ -90,15 +108,13 @@ const LoadoutMenu: React.FC = () => {
             return updatedLoadouts;
         });
     };
+    
 
-    const handleUpload = () => {
-        setOpen(true);
-    };
 
     if (loading) {
         return (
             <div className="LoadoutMenuContainer">
-                <div>Loading loadouts...</div>
+                <div className='circularProgressContainer'><CircularProgress color="inherit"/></div>
             </div>
         );
     }
@@ -108,7 +124,7 @@ const LoadoutMenu: React.FC = () => {
             <div className="LoadoutMenuContainer">
                 <div>Error: {error}</div>
             </div>
-        )
+        );
     }
 
     return (
@@ -131,17 +147,8 @@ const LoadoutMenu: React.FC = () => {
                 <h2>ADD NEW LOADOUT</h2>
             </div>
 
-            <Snackbar
-                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                open={open}
-                onClose={handleClose}
-                autoHideDuration={2800}
-                message="Please connect your device to access your loadout"
-            />
-
-            <div className="uploadLoadoutButton">
-                <h2 onClick={handleUpload}>UPLOAD NEW LOADOUT</h2>
-            </div>
+            {/* Use the UploadLoadoutButton component */}
+            <UploadLoadoutButton loadoutName={selectedLoadoutName} />
         </div>
     );
 };

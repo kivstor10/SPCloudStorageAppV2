@@ -11,6 +11,7 @@ import Play from '../assets/PlayIcon.svg';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { uploadData } from "aws-amplify/storage";
 import DeleteDialog from "../components/DeleteDialog";
+import UploadLoadoutButton from "../components/UploadLoadoutButton"; // Import the new component
 
 const padImports = {
     pad1: () => import("../assets/1.svg"),
@@ -165,7 +166,7 @@ const LoadoutPage: React.FC = ({ }) => {
             const paddingLength = 7 - padNumberString.length;
             const padding = '0'.repeat(Math.max(0, paddingLength));
             const fileExtension = file.name.split('.').pop()?.toLowerCase();
-            return `${userId}/${loadoutIdFromRoute}/${selectedBankLetter}${padding}${padNumberString}.${fileExtension}`;
+            return `public/${userId}/${loadoutIdFromRoute}/${selectedBankLetter}${padding}${padNumberString}.${fileExtension}`;
         }
         return null;
     }, [selectedBankLetter, selectedPadNumber, loadoutIdFromRoute, userId, file]);
@@ -213,6 +214,49 @@ const LoadoutPage: React.FC = ({ }) => {
             performUpload();
         }
     }, [performUpload, file, selectedPadNumber, selectedBankLetter, loadoutIdFromRoute, user]);
+
+    // State to hold the loadout name.
+      const [currentLoadoutName, setCurrentLoadoutName] = useState<string>('LOADOUT');
+
+    // Effect to update the loadout name.
+    useEffect(() => {
+        const fetchLoadoutName = async () => {
+            if (userId && loadoutIdFromRoute) {
+                setLoadingName(true);
+                setErrorName(null);
+                const apiUrl = `https://c9xg7aqnmf.execute-api.eu-west-2.amazonaws.com/dev/loadouts/${loadoutIdFromRoute}?userId=${userId}`;
+                console.log("Fetching loadout name from:", apiUrl);
+                try {
+                    const response = await fetch(apiUrl);
+                    console.log("API Response Status:", response.status);
+                    if (!response.ok) {
+                        const errorText = await response.text();
+                        throw new Error(`Failed to fetch loadout name: ${response.status} - ${errorText}`);
+                    }
+                    const data = await response.json();
+                    console.log("API Response Data:", data);
+
+                    if (Array.isArray(data) && data.length > 0 && data[0].loadoutName) {
+                        setCurrentLoadoutName(data[0].loadoutName); // Set the state
+                        setLoadoutName(data[0].loadoutName);
+                    } else {
+                        setCurrentLoadoutName("LOADOUT");
+                        setLoadoutName("LOADOUT");
+                    }
+
+                } catch (err: any) {
+                    setErrorName(err.message || 'Failed to load loadout name.');
+                    console.error("Error fetching loadout name:", err);
+                    setCurrentLoadoutName("LOADOUT");
+                    setLoadoutName("LOADOUT");
+                } finally {
+                    setLoadingName(false);
+                }
+            }
+        };
+
+        fetchLoadoutName();
+    }, [userId, loadoutIdFromRoute]);
 
 
     return (
@@ -272,7 +316,7 @@ const LoadoutPage: React.FC = ({ }) => {
                                         onChange={handleChange}
                                         style={{ display: 'none' }}
                                         ref={fileInputRef}
-                                        accept=".wav,.mp3" // Accept both .wav and .mp3
+                                        accept=".wav,.mp3"
                                     />
                                     <button onClick={handleClick} disabled={isUploading || !selectedPadNumber || !selectedBankLetter}>
                                         {isUploading ? 'Uploading...' : 'Upload'}
@@ -303,6 +347,7 @@ const LoadoutPage: React.FC = ({ }) => {
                 onDelete={handleDeleteConfirmed}
                 padNumber={padToDelete}
             />
+            <UploadLoadoutButton loadoutName={currentLoadoutName} />
         </div>
     );
 };
