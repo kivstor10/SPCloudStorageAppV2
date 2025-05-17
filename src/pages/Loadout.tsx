@@ -321,11 +321,6 @@ const LoadoutPage: React.FC = ({ }) => {
                                     <button onClick={handleClick} disabled={isUploading || !selectedPadNumber || !selectedBankLetter}>
                                         {isUploading ? 'Uploading...' : 'Upload'}
                                     </button>
-                                    {uploadProgress !== null && (
-                                        <div>
-                                            Upload Progress: {uploadProgress}%
-                                        </div>
-                                    )}
                                     <button onClick={() => {
                                         if (selectedPadNumber !== null) {
                                             handleStartDelete(selectedPadNumber);
@@ -333,6 +328,13 @@ const LoadoutPage: React.FC = ({ }) => {
                                     }}>Delete</button>
                                     <button>Export</button>
                                 </div>
+                                {uploadProgress !== null && (
+                                    <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: 12 }}>
+                                        <div style={{ width: '100%', textAlign: 'center', background: '#f5f5f5', borderRadius: 4, padding: 8 }}>
+                                            Upload Progress: {uploadProgress}%
+                                        </div>
+                                    </div>
+                                )}
                             </Typography>
                         </AccordionDetails>
                     </Accordion>
