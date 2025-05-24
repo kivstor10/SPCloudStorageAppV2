@@ -7,12 +7,27 @@ interface UploadLoadoutButtonProps {
     loadoutId?: string;
 }
 
-const UploadLoadoutButton: React.FC<UploadLoadoutButtonProps> = ({ loadoutName, loadoutId }) => {
+const UploadLoadoutButton: React.FC<UploadLoadoutButtonProps> = ({ loadoutName, loadoutId: propLoadoutId }) => {
     const [open, setOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("Please connect your device to access your loadout");
     const { user } = useAuthenticator((context) => [context.user]);
     const userId = user?.userId;
     const generateUrlsApiUrl = "https://406kys45ca.execute-api.eu-west-2.amazonaws.com/dev/generate-urls";
+    const [loadoutId, setLoadoutId] = useState<string | undefined>(propLoadoutId);
+
+    // Try to find loadoutId from DOM if not provided
+    React.useEffect(() => {
+        if (!propLoadoutId) {
+            // Try to find an element with class 'active' and a data-loadout-id attribute
+            const activeEl = document.querySelector('.active[data-loadout-id]');
+            if (activeEl) {
+                const id = activeEl.getAttribute('data-loadout-id');
+                if (id) setLoadoutId(id);
+            }
+        } else {
+            setLoadoutId(propLoadoutId);
+        }
+    }, [propLoadoutId]);
 
     const handleClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') return;
@@ -20,7 +35,6 @@ const UploadLoadoutButton: React.FC<UploadLoadoutButtonProps> = ({ loadoutName, 
     };
 
     const handleUpload = async () => {
-        // No need to fetch deviceId anymore
         setOpen(true);
         setSnackbarMessage(`Uploading loadout: ${loadoutName}...`); // Set a loading message
 
@@ -34,16 +48,15 @@ const UploadLoadoutButton: React.FC<UploadLoadoutButtonProps> = ({ loadoutName, 
                 return;
             }
 
-            // Call your generate URLs API, passing only userSub and loadoutId
-            const response = await fetch(generateUrlsApiUrl, {
+            // Build URL with query parameters
+            const url = `${generateUrlsApiUrl}?userSub=${encodeURIComponent(userId)}&loadoutId=${encodeURIComponent(loadoutId)}`;
+
+            // Call your generate URLs API, passing only userSub and loadoutId as query params
+            const response = await fetch(url, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    userSub: userId, // Use userId here
-                    loadoutId: loadoutId, // Pass the loadout ID
-                }),
             });
 
             if (!response.ok) {

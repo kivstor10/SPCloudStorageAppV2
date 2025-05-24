@@ -33,7 +33,7 @@ const LoadoutItem: React.FC<LoadoutItemProps> = ({
   };
 
   return (
-    <li className={active} onClick={handleItemClick}>
+    <li className={active} data-loadout-id={id} onClick={handleItemClick}>
       <Link 
         to={`/loadout/${id}`} 
         onClick={handleLinkClick}
