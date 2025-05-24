@@ -349,7 +349,7 @@ const LoadoutPage: React.FC = ({ }) => {
                 onDelete={handleDeleteConfirmed}
                 padNumber={padToDelete}
             />
-            <UploadLoadoutButton loadoutName={currentLoadoutName} />
+            <UploadLoadoutButton loadoutName={currentLoadoutName} loadoutId={loadoutIdFromRoute} />
         </div>
     );
 };
