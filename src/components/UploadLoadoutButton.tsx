@@ -61,7 +61,7 @@ const UploadLoadoutButton: React.FC<UploadLoadoutButtonProps> = ({ loadoutName, 
 
             if (!response.ok) {
                 const errorData = await response.json(); // Attempt to get error message
-                throw new Error(errorData.message || `Failed to upload loadout: ${response.status}`);
+                throw new Error(errorData.message || `Failed to upload loadout: ${response.status} Try refreshing the page.`);
             }
 
             await response.json();
