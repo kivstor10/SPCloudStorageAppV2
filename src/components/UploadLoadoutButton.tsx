@@ -51,7 +51,7 @@ const UploadLoadoutButton: React.FC<UploadLoadoutButtonProps> = ({ loadoutName, 
             // Build URL with query parameters
             const url = `${generateUrlsApiUrl}?userSub=${encodeURIComponent(userId)}&loadoutId=${encodeURIComponent(loadoutId)}`;
 
-            // Call your generate URLs API, passing only userSub and loadoutId as query params
+            // Call generate URLs API, passing only userSub and loadoutId as query params
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -60,15 +60,15 @@ const UploadLoadoutButton: React.FC<UploadLoadoutButtonProps> = ({ loadoutName, 
             });
 
             if (!response.ok) {
-                const errorData = await response.json(); // Attempt to get error message
+                const errorData = await response.json(); 
                 throw new Error(errorData.message || `Failed to upload loadout: ${response.status} Try refreshing the page.`);
             }
 
             await response.json();
-            setSnackbarMessage(`Loadout "${loadoutName}" uploaded successfully!`); // Success message
+            setSnackbarMessage(`Loadout "${loadoutName}" uploaded successfully!`);
 
         } catch (error: any) {
-            setSnackbarMessage(`Error uploading loadout: ${error.message || 'Unknown error'}`); // Show error
+            setSnackbarMessage(`Error uploading loadout: ${error.message || 'Unknown error'}`); 
             console.error("Error uploading loadout:", error);
         }
     };

@@ -92,7 +92,7 @@ export default function ConnectDeviceDialog({ open, onClose, onConnect, userId }
               color: '#dbdbdb',
             },
             '& input': {
-              color: 'var(--text-primary)',
+              color: 'var(--text-primary)!important',
             },
             '& .MuiInput-underline:before': {
               borderColor: '#dbdbdb',
