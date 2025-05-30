@@ -4,7 +4,6 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 import { 
   Layout,
   Landing, 
-  Signin,
   AdminLog,
   UserManagement,
   Loadout,
@@ -74,10 +73,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Landing />,
-      },
-      {
-        path: "/sign-in",
-        element: <Signin />,
       },
       {
         path: "/loadout/:loadoutId",
