@@ -11,7 +11,7 @@ import Play from '../assets/PlayIcon.svg';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { uploadData } from "aws-amplify/storage";
 import DeleteDialog from "../components/DeleteDialog";
-import UploadLoadoutButton from "../components/UploadLoadoutButton"; // Import the new component
+import UploadLoadoutButton from "../components/UploadLoadoutButton"; 
 
 const padImports = {
     pad1: () => import("../assets/1.svg"),

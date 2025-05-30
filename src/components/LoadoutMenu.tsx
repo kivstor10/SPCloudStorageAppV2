@@ -179,7 +179,6 @@ const LoadoutMenu: React.FC = () => {
         return (
             <div className="LoadoutMenuContainer">
                 <div>Error: {error}</div>
-                {/* Optionally, provide a retry mechanism */}
             </div>
         );
     }
