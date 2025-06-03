@@ -11,7 +11,9 @@ import Play from '../assets/PlayIcon.svg';
 import { useAuthenticator } from '@aws-amplify/ui-react';
 import { uploadData } from "aws-amplify/storage";
 import DeleteDialog from "../components/DeleteDialog";
-import UploadLoadoutButton from "../components/UploadLoadoutButton"; 
+import UploadLoadoutButton from "../components/UploadLoadoutButton";
+import Snackbar from '@mui/material/Snackbar';
+import Alert, { AlertColor } from '@mui/material/Alert';
 
 const padImports = {
     pad1: () => import("../assets/1.svg"),
@@ -53,6 +55,12 @@ const LoadoutPage: React.FC = ({ }) => {
     const [isUploading, setIsUploading] = useState(false);
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [padToDelete, setPadToDelete] = useState<number | null>(null);
+
+    // Snackbar state
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [snackbarSeverity, setSnackbarSeverity] = useState<AlertColor>('success');
+
 
     const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -148,10 +156,15 @@ const LoadoutPage: React.FC = ({ }) => {
                     return newPads;
                 });
                 setIsUploading(false);
-                alert(`Pad ${padToDelete} deleted successfully!`);
+                setSnackbarMessage(`Pad ${padToDelete} deleted successfully!`);
+                setSnackbarSeverity('success');
+                setSnackbarOpen(true);
             } catch (error: any) {
                 console.error("Error deleting file:", error);
                 setErrorName("Failed to delete file. Please try again.");
+                setSnackbarMessage("Failed to delete file. Please try again.");
+                setSnackbarSeverity('error');
+                setSnackbarOpen(true);
                 setIsUploading(false);
             } finally {
                 setDeleteDialogOpen(false);
@@ -193,16 +206,23 @@ const LoadoutPage: React.FC = ({ }) => {
                     }).result;
                     console.log("Upload result", result);
                     setIsUploading(false);
-                    alert(`File uploaded to ${s3Key} successfully!`);
+                    setSnackbarMessage("File uploaded successfully!");
+                    setSnackbarSeverity('success');
+                    setSnackbarOpen(true);
                 } catch (error: any) {
                     console.error("Error uploading file:", error);
-                    setErrorName("Failed to upload file. Please try again.");
+                    setSnackbarMessage("Failed to upload file. Please try again.");
+                    setSnackbarSeverity('error');
+                    setSnackbarOpen(true);
                     setIsUploading(false);
                 } finally {
                     setFile(undefined);
                 }
             } else {
                 console.warn("Could not generate S3 key. Missing bank, pad number, or loadout ID.");
+                setSnackbarMessage("Could not generate S3 key. Check selection.");
+                setSnackbarSeverity('warning');
+                setSnackbarOpen(true);
                 setIsUploading(false);
             }
         }
@@ -258,6 +278,13 @@ const LoadoutPage: React.FC = ({ }) => {
         fetchLoadoutName();
     }, [userId, loadoutIdFromRoute]);
 
+
+    const handleSnackbarClose = (_event?: React.SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    };
 
     return (
         <div className="LoadoutPageContainer">
@@ -350,6 +377,27 @@ const LoadoutPage: React.FC = ({ }) => {
                 padNumber={padToDelete}
             />
             <UploadLoadoutButton loadoutName={currentLoadoutName} loadoutId={loadoutIdFromRoute} />
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert 
+                    onClose={handleSnackbarClose} 
+                    severity={snackbarSeverity} 
+                    sx={{
+                        width: '100%',
+                        backgroundColor: 'var(--background-primary)',
+                        color: 'var(--text-primary)',
+                        '.MuiAlert-icon': {
+                            color: 'var(--text-primary)',
+                        }
+                    }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </div>
     );
 };

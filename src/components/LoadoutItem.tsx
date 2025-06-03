@@ -1,31 +1,42 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import LoadoutIcon from '../assets/LoadoutIcon.svg';
-import LoadoutOptions from './LoadoutOptions';
+import LoadoutOptions from './LoadoutOptions'; 
 
 interface LoadoutItemProps {
-  active?: string;
+  active: boolean;
   name: string;
-  id: string;
-  onClick: () => void;
-  onDelete: () => void;
+  loadoutId: string;
+  userId: string;
+  apiKey: string;
+  apiEndpoint: string;
+  onClick: () => void; 
+  onToggleActive: () => Promise<void>;
+  onSuccess: () => void;
+  onError: (action: string, error: any) => void;
 }
 
 const LoadoutItem: React.FC<LoadoutItemProps> = ({
-  active = "",
-  name = "Loadout",
-  id,
+  active,
+  name,
+  loadoutId,
+  userId,
+  apiKey,
+  apiEndpoint,
   onClick,
-  onDelete
+  onToggleActive, 
+  onSuccess,
+  onError,
 }) => {
+  const activeClassName = active ? "active" : "";
+
   const handleLinkClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onClick(); // Set as active when clicking the link
-    // Navigation is handled by the Link component
+    onClick(); 
   };
 
   const handleItemClick = () => {
-    onClick(); // Set as active when clicking anywhere in the item
+    onClick(); 
   };
 
   const handleOptionsClick = (e: React.MouseEvent) => {
@@ -33,20 +44,26 @@ const LoadoutItem: React.FC<LoadoutItemProps> = ({
   };
 
   return (
-    <li className={active} data-loadout-id={id} onClick={handleItemClick}>
+    <li className={activeClassName} data-loadout-id={loadoutId} onClick={handleItemClick}>
       <Link 
-        to={`/loadout/${id}`} 
+        to={`/loadout/${loadoutId}`} 
         onClick={handleLinkClick}
-        style={{ display: 'flex', alignItems: 'center', flexGrow: 1 }}
+        style={{ display: 'flex', alignItems: 'center', flexGrow: 1, textDecoration: 'none', color: '#242424' }}
       >
-        <img src={LoadoutIcon} alt="Loadout icon" />
+        <img src={LoadoutIcon} alt="Loadout icon" style={{ marginRight: '10px' }}/>
         {name}
       </Link>
       <div onClick={handleOptionsClick}>
         <LoadoutOptions 
-          onDelete={onDelete} 
-          onRename={() => console.log('Rename action')} 
-          onToggleActive={() => console.log('Toggle active action')} 
+          userId={userId}
+          loadoutId={loadoutId}
+          loadoutName={name}
+          active={active}
+          apiKey={apiKey}
+          apiEndpoint={apiEndpoint}
+          onSuccess={onSuccess}
+          onError={onError}
+          onToggleActive={onToggleActive} 
         />
       </div>
     </li>
