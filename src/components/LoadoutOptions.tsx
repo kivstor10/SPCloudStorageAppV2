@@ -129,7 +129,6 @@ const LoadoutOptions: React.FC<LoadoutOptionsProps> = ({
         open={open}
         onClose={handleCloseMenu}
       >
-        {/* Remove Deactivate option: only allow activating if not already active */}
         {!active && (
           <MenuItem onClick={handleToggleClick} disabled={isLoading}>
             Set as active

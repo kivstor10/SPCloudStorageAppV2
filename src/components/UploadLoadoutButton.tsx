@@ -18,7 +18,7 @@ const UploadLoadoutButton: React.FC<UploadLoadoutButtonProps> = ({ loadoutName, 
     // Try to find loadoutId from DOM if not provided
     React.useEffect(() => {
         if (!propLoadoutId) {
-            // Try to find an element with class 'active' and a data-loadout-id attribute
+            // Find an element with class 'active' and a data-loadout-id attribute
             const activeEl = document.querySelector('.active[data-loadout-id]');
             if (activeEl) {
                 const id = activeEl.getAttribute('data-loadout-id');

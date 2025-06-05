@@ -7,7 +7,7 @@ import {
   AdminLog,
   UserManagement,
   Loadout,
-  Error // Import a NotFound component
+  Error 
 } from "./pages";
 import {
   RouterProvider,
@@ -53,14 +53,14 @@ const AdminRoutes = () => {
   }
 
   if (!isAdmin) {
-    return <Navigate to="/" replace />; // Use Navigate for redirection
+    return <Navigate to="/" replace />; 
   }
 
   return (
     <Routes>
       <Route path="/log" element={<AdminLog />} />
       <Route path="/usermanagement" element={<UserManagement />} />
-      <Route path="*" element={<Error />} /> {/* Add this line */}
+      <Route path="*" element={<Error />} /> 
     </Routes>
   );
 };
@@ -83,7 +83,7 @@ const router = createBrowserRouter([
         element: <AdminRoutes />,
       },
       {
-        path: "*",  // Catch-all route for 404s
+        path: "*",  
         element: <Error />,
       }
     ],

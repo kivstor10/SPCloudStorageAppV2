@@ -181,7 +181,6 @@ const LoadoutMenu: React.FC = () => {
         // When adding a new loadout, set it as inactive by default.
         const isActive = false;
         try {
-            // Do not deactivate any existing loadout, just add a new inactive one
             const url = `${API_ENDPOINT}/loadouts?userId=${userId}&loadoutId=${newLoadoutId}&loadoutName=${encodeURIComponent(newLoadoutName)}&active=${isActive}`;
             const response = await fetch(url, {
                 method: 'POST',
